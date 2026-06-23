@@ -143,13 +143,13 @@ onUnmounted(() => {
 
     <div class="container hero-content">
       <!-- Left: Text -->
-      <div class="hero-text fade-up visible">
-        <div class="badge">
+      <div class="hero-text">
+        <div class="badge fade-blur visible" data-delay="0">
           <span class="dot"></span>
           Sẵn sàng nhận dự án mới
         </div>
 
-        <h1 class="hero-title">
+        <h1 class="hero-title fade-up visible" data-delay="100">
           Xin chào, tôi là<br/>
           <span class="text-gradient typing-wrapper">
             {{ displayedRole }}<span class="cursor">|</span>
@@ -157,13 +157,13 @@ onUnmounted(() => {
           <span class="wave-emoji">👋</span>
         </h1>
 
-        <p class="hero-subtitle">
+        <p class="hero-subtitle fade-up visible" data-delay="200">
           Tôi xây dựng các trải nghiệm web <strong>cao cấp</strong>, nhanh chóng và dễ tiếp cận —
           kết hợp hoàn hảo giữa thiết kế tinh tế và công nghệ hiện đại.
         </p>
 
         <!-- Actions -->
-        <div class="hero-actions">
+        <div class="hero-actions fade-up visible" data-delay="300">
           <a href="#projects" class="btn btn-primary" id="hero-cta-projects">
             Xem Sản Phẩm <i class="fa-solid fa-arrow-right"></i>
           </a>
@@ -173,8 +173,8 @@ onUnmounted(() => {
         </div>
 
         <!-- Social Icons -->
-        <div class="social-links">
-          <a href="https://github.com/cornhuy04" class="social-icon" target="_blank" rel="noopener" aria-label="GitHub">
+        <div class="social-links fade-up visible" data-delay="400">
+          <a href="https://github.com/huynvg-04/" class="social-icon" target="_blank" rel="noopener" aria-label="GitHub">
             <i class="fa-brands fa-github"></i>
           </a>
           <a href="https://www.linkedin.com/in/ngo-van-gia-huy04" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn">
@@ -187,7 +187,7 @@ onUnmounted(() => {
       </div>
 
       <!-- Right: Visual -->
-      <div class="hero-visual">
+      <div class="hero-visual fade-right visible" data-delay="200">
         <!-- Avatar ring -->
         <div class="avatar-ring">
           <div class="avatar-inner">

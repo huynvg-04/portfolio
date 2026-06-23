@@ -74,15 +74,16 @@ onMounted(() => {
 <template>
   <section id="about" class="about-section">
     <div class="container">
-      <h2 class="section-title fade-up">Về <span class="text-gradient">Tôi</span></h2>
-      <p class="section-subtitle fade-up">
+      <h2 class="section-title flip-in-bottom">Về <span class="text-gradient">Tôi</span></h2>
+      <p class="section-subtitle flip-in-bottom" data-flip-delay="150">
         Một lập trình viên đam mê kiến tạo những sản phẩm số có ý nghĩa,
         kết hợp kỹ thuật vững chắc với tư duy thiết kế sáng tạo.
       </p>
 
       <!-- Cards -->
-      <div class="about-grid fade-up">
-        <div class="glass-card about-card" v-for="(card, i) in cards" :key="i"
+      <div class="about-grid">
+        <div class="glass-card about-card flip-in-bottom" v-for="(card, i) in cards" :key="i"
+             :data-flip-delay="i * 150"
              :style="{ '--card-accent': card.color.startsWith('--') ? `var(${card.color})` : card.color }">
           <div class="card-icon-wrap">
             <i :class="card.icon" :style="{ color: card.color.startsWith('--') ? `var(${card.color})` : card.color }"></i>
@@ -93,9 +94,9 @@ onMounted(() => {
       </div>
 
       <!-- Skills + Tech -->
-      <div class="skills-tech-grid fade-up">
+      <div class="skills-tech-grid">
         <!-- Skills Bars -->
-        <div class="glass-card skills-card">
+        <div class="glass-card skills-card flip-in-left">
           <h3 class="sub-heading">
             <i class="fa-solid fa-chart-bar"></i> Kỹ Năng Chuyên Môn
           </h3>
@@ -115,7 +116,7 @@ onMounted(() => {
         </div>
 
         <!-- Tech Stack -->
-        <div class="glass-card tech-card">
+        <div class="glass-card tech-card flip-in-right" data-flip-delay="150">
           <h3 class="sub-heading">
             <i class="fa-solid fa-layer-group"></i> Tech Stack
           </h3>

@@ -24,14 +24,14 @@ const submit = async () => {
   <section id="contact" class="contact-section">
     <div class="bg-glow-2 bg-glow" style="position:absolute;"></div>
     <div class="container">
-      <h2 class="section-title fade-up">Liên Hệ <span class="text-gradient">Với Tôi</span></h2>
-      <p class="section-subtitle fade-up">
+      <h2 class="section-title flip-in-left">Liên Hệ <span class="text-gradient">Với Tôi</span></h2>
+      <p class="section-subtitle flip-in-left" data-flip-delay="150">
         Tôi hiện đang tìm kiếm cơ hội mới. Hộp thư của tôi luôn mở — hãy nhắn tin bất cứ lúc nào!
       </p>
 
-      <div class="contact-layout fade-up">
+      <div class="contact-layout">
         <!-- Left: Info -->
-        <div class="contact-info">
+        <div class="contact-info flip-in-left" data-flip-delay="200">
           <div class="glass-card info-card">
             <h3>Hãy cùng nhau xây dựng<br><span class="text-gradient">điều tuyệt vời</span> 🚀</h3>
             <p class="info-sub">
@@ -85,7 +85,7 @@ const submit = async () => {
         </div>
 
         <!-- Right: Form -->
-        <div class="contact-form-wrap">
+        <div class="contact-form-wrap flip-in-right" data-flip-delay="300">
           <div class="glass-card form-card">
             <h3 class="form-title"><i class="fa-solid fa-paper-plane"></i> Gửi Tin Nhắn</h3>
 

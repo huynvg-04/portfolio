@@ -8,43 +8,13 @@ const projects = [
   {
     title: 'Nền Tảng Thương Mại Điện Tử',
     desc:  'Hệ thống thương mại điện tử quy mô lớn với thanh toán Stripe, giỏ hàng real-time, và bảng quản trị admin toàn diện. UX mượt mà, tốc độ cực nhanh.',
-    tech:  ['Vue 3', 'Vite', 'Node.js', 'Stripe'],
+    tech:  ['PHP', 'Laravel', 'MySQL'],
     icon:  'fa-solid fa-cart-shopping',
     color: '#38bdf8',
     category: 'Fullstack',
-    github: 'https://github.com/cornhuy04',
+    github: 'https://github.com/huynvg-04/greenvibes',
     demo:   '#',
-  },
-  {
-    title: 'Bảng Điều Khiển AI Analytics',
-    desc:  'Giao diện phân tích dữ liệu AI với biểu đồ tương tác, dark mode và layout trực quan. Hỗ trợ dữ liệu real-time qua WebSocket.',
-    tech:  ['Vue 3', 'Chart.js', 'SCSS', 'Socket.io'],
-    icon:  'fa-solid fa-chart-pie',
-    color: '#a78bfa',
-    category: 'Frontend',
-    github: 'https://github.com/cornhuy04',
-    demo:   '#',
-  },
-  {
-    title: 'Mạng Xã Hội Realtime',
-    desc:  'Ứng dụng mạng xã hội thời gian thực: chia sẻ bài viết, nhắn tin trực tiếp, thông báo push và hệ thống kết bạn đầy đủ.',
-    tech:  ['Vue', 'Firebase', 'Pinia', 'Tailwind'],
-    icon:  'fa-solid fa-users',
-    color: '#f472b6',
-    category: 'Fullstack',
-    github: 'https://github.com/cornhuy04',
-    demo:   '#',
-  },
-  {
-    title: 'REST API Microservices',
-    desc:  'Kiến trúc microservices cho hệ thống backend lớn. Bao gồm authentication, rate limiting, caching Redis và API Gateway.',
-    tech:  ['Node.js', 'Express', 'Redis', 'Docker'],
-    icon:  'fa-solid fa-server',
-    color: '#4ade80',
-    category: 'Backend',
-    github: 'https://github.com/cornhuy04',
-    demo:   '#',
-  },
+  }
 ];
 
 const filtered = computed(() =>
@@ -73,11 +43,11 @@ const handleMouseLeave = (card) => {
   <section id="projects" class="projects-section">
     <div class="bg-glow-2 bg-glow" style="opacity:0.07;"></div>
     <div class="container">
-      <h2 class="section-title fade-up">Dự Án <span class="text-gradient">Nổi Bật</span></h2>
-      <p class="section-subtitle fade-up">Một số sản phẩm tôi đã xây dựng — từ giao diện đến kiến trúc hệ thống.</p>
+      <h2 class="section-title flip-in-right">Dự Án <span class="text-gradient">Nổi Bật</span></h2>
+      <p class="section-subtitle flip-in-right" data-flip-delay="150">Một số sản phẩm tôi đã xây dựng — từ giao diện đến kiến trúc hệ thống.</p>
 
       <!-- Filter Tabs -->
-      <div class="filter-tabs fade-up">
+      <div class="filter-tabs flip-in-right" data-flip-delay="200">
         <button
           v-for="f in filters" :key="f"
           :class="['filter-btn', { active: activeFilter === f }]"
@@ -89,10 +59,11 @@ const handleMouseLeave = (card) => {
       <!-- Grid -->
       <div class="projects-grid">
         <div
-          class="glass-card project-card fade-up"
+          class="glass-card project-card flip-in-bottom"
           v-for="(project, index) in filtered"
           :key="project.title"
-          :style="{ '--p-color': project.color, animationDelay: index * 0.1 + 's' }"
+          :data-flip-delay="index * 150"
+          :style="{ '--p-color': project.color }"
           @mousemove="handleMouseMove($event, $event.currentTarget)"
           @mouseleave="handleMouseLeave($event.currentTarget)"
         >

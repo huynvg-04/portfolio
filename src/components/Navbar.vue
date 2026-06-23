@@ -55,7 +55,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
       <!-- Logo -->
       <a href="#hero" class="logo" @click="closeMenu">
         <span class="logo-bracket">&lt;</span>
-        <span class="text-gradient">Portfolio</span>
+        <span class="text-gradient">huynvg-04</span>
         <span class="logo-bracket">/&gt;</span>
       </a>
 
