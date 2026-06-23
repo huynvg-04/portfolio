@@ -1,41 +1,77 @@
+/* ============================================================
+   PORTFOLIO — PREMIUM DESIGN SYSTEM
+   ============================================================ */
+
 :root {
-  /* Colors - Dark Mode (Mặc định) */
-  --bg-dark: #050505;
-  --bg-glass: rgba(255, 255, 255, 0.03);
+  /* ── Base Colors (Dark Mode) ── */
+  --bg-dark:        #07080d;
+  --bg-surface:     #0d0f1a;
+  --bg-glass:       rgba(255, 255, 255, 0.04);
   --bg-glass-hover: rgba(255, 255, 255, 0.08);
-  --border-glass: rgba(255, 255, 255, 0.05);
-  --border-glass-hover: rgba(255, 255, 255, 0.1);
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --accent: #38bdf8;
-  --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
-  --input-bg: rgba(0, 0, 0, 0.3);
-  --shadow-color: rgba(0, 0, 0, 0.5);
+  --border-glass:         rgba(255, 255, 255, 0.07);
+  --border-glass-hover:   rgba(255, 255, 255, 0.15);
+  --text-main:  #f0f4ff;
+  --text-muted: #8892b0;
+  --text-dim:   #4a5568;
 
-  /* Typography */
+  /* ── Accent Palette ── */
+  --accent:        #38bdf8;
+  --accent-dim:    rgba(56, 189, 248, 0.15);
+  --neon-purple:   #a78bfa;
+  --neon-pink:     #f472b6;
+  --neon-green:    #4ade80;
+  --neon-orange:   #fb923c;
+
+  --accent-gradient:  linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #a78bfa 100%);
+  --card-gradient:    linear-gradient(135deg, rgba(56,189,248,0.08) 0%, rgba(167,139,250,0.08) 100%);
+  --aurora-gradient:  linear-gradient(135deg, #38bdf8, #818cf8, #a78bfa, #f472b6);
+  --shine-gradient:   linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
+
+  /* ── Misc ── */
+  --input-bg:       rgba(255, 255, 255, 0.05);
+  --shadow-color:   rgba(0, 0, 0, 0.6);
+  --shadow-glow:    rgba(56, 189, 248, 0.25);
+  --shadow-purple:  rgba(167, 139, 250, 0.25);
+
+  /* ── Typography ── */
   --font-main: 'Outfit', sans-serif;
+  --font-code: 'Fira Code', monospace;
 
-  /* Utilities */
-  --radius: 16px;
+  /* ── Tokens ── */
+  --radius:     16px;
+  --radius-sm:  10px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s ease;
 }
 
+/* ── Light Mode ── */
 :root[data-theme="light"] {
-  /* Colors - Light Mode */
-  --bg-dark: #f8fafc;
-  --bg-glass: rgba(0, 0, 0, 0.03);
+  --bg-dark:        #f3f6ff;
+  --bg-surface:     #ffffff;
+  --bg-glass:       rgba(0, 0, 0, 0.03);
   --bg-glass-hover: rgba(0, 0, 0, 0.06);
-  --border-glass: rgba(0, 0, 0, 0.1);
-  --border-glass-hover: rgba(0, 0, 0, 0.2);
-  --text-main: #0f172a;
+  --border-glass:         rgba(0, 0, 0, 0.08);
+  --border-glass-hover:   rgba(0, 0, 0, 0.18);
+  --text-main:  #0f172a;
   --text-muted: #475569;
-  --accent: #0ea5e9;
-  --accent-gradient: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
-  --input-bg: rgba(255, 255, 255, 0.8);
-  --shadow-color: rgba(0, 0, 0, 0.05);
+  --text-dim:   #94a3b8;
+  --accent:        #0ea5e9;
+  --accent-dim:    rgba(14, 165, 233, 0.12);
+  --neon-purple:   #7c3aed;
+  --neon-pink:     #db2777;
+  --neon-green:    #16a34a;
+  --neon-orange:   #ea580c;
+  --accent-gradient:  linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #7c3aed 100%);
+  --card-gradient:    linear-gradient(135deg, rgba(14,165,233,0.06) 0%, rgba(124,58,237,0.06) 100%);
+  --input-bg:       rgba(0, 0, 0, 0.04);
+  --shadow-color:   rgba(0, 0, 0, 0.08);
+  --shadow-glow:    rgba(14, 165, 233, 0.2);
 }
 
-* {
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -43,54 +79,63 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
 }
 
 body {
   font-family: var(--font-main);
   background-color: var(--bg-dark);
   color: var(--text-main);
-  line-height: 1.6;
+  line-height: 1.65;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* Background Effects */
+/* ── Selection ── */
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ============================================================
+   BACKGROUND EFFECTS
+   ============================================================ */
 .bg-glow {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60vw;
-  height: 60vh;
-  background: var(--accent-gradient);
-  filter: blur(150px);
-  opacity: 0.15;
-  z-index: -1;
   border-radius: 50%;
   pointer-events: none;
+  z-index: -1;
+  filter: blur(120px);
+  opacity: 0.18;
+}
+
+.bg-glow-1 {
+  width: 55vw;
+  height: 55vw;
+  top: -15%;
+  right: -15%;
+  background: radial-gradient(circle, #38bdf8 0%, #818cf8 60%, transparent 100%);
+}
+
+.bg-glow-2 {
+  width: 45vw;
+  height: 45vw;
+  bottom: -10%;
+  left: -10%;
+  background: radial-gradient(circle, #a78bfa 0%, #f472b6 60%, transparent 100%);
+  opacity: 0.12;
 }
 
 :root[data-theme="light"] .bg-glow {
-  opacity: 0.1;
+  opacity: 0.08;
 }
 
-.bg-glow.top-right {
-  top: 0;
-  left: 100%;
-}
-
-.bg-glow.bottom-left {
-  top: 100%;
-  left: 0;
-}
-
-/* Typography */
-h1,
-h2,
-h3,
-h4 {
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1, h2, h3, h4 {
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 .text-gradient {
@@ -101,12 +146,24 @@ h4 {
 }
 
 .section-title {
-  font-size: 3rem;
-  margin-bottom: 2rem;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  margin-bottom: 1rem;
   text-align: center;
+  letter-spacing: -0.02em;
 }
 
-/* Layout */
+.section-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  max-width: 550px;
+  margin: 0 auto 4rem;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -114,139 +171,189 @@ h4 {
 }
 
 section {
-  padding: 6rem 0;
+  padding: 7rem 0;
   position: relative;
 }
 
-/* Buttons */
+/* ============================================================
+   BUTTONS
+   ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 0.875rem 2rem;
-  border-radius: 30px;
+  gap: 0.65rem;
+  padding: 0.9rem 2.2rem;
+  border-radius: 50px;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: var(--transition);
   text-decoration: none;
   border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--shine-gradient);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btn:hover::after {
+  opacity: 1;
+  animation: shine-sweep 0.5s ease forwards;
 }
 
 .btn-primary {
   background: var(--accent-gradient);
   color: #fff;
+  box-shadow: 0 4px 24px var(--shadow-glow);
 }
 
-:root[data-theme="light"] .btn-primary {}
-
 .btn-primary:hover {
-  transform: translateY(-2px)
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px var(--shadow-glow);
 }
 
 .btn-outline {
-  background: transparent;
+  background: var(--bg-glass);
   color: var(--text-main);
   border: 1px solid var(--border-glass-hover);
+  backdrop-filter: blur(8px);
 }
 
 .btn-outline:hover {
   background: var(--bg-glass-hover);
-  border-color: var(--text-muted);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-/* Glass Cards */
+/* ============================================================
+   GLASS CARDS
+   ============================================================ */
 .glass-card {
-  background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--card-gradient);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius);
   padding: 2rem;
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--shine-gradient);
+  background-size: 300% 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.glass-card:hover::before {
+  opacity: 1;
 }
 
 .glass-card:hover {
-  transform: translateY(-5px);
-  background: var(--bg-glass-hover);
+  transform: translateY(-6px);
   border-color: var(--border-glass-hover);
+  box-shadow: 0 20px 60px var(--shadow-color), 0 0 0 1px var(--border-glass-hover);
 }
 
-/* Form Elements */
-input,
-textarea {
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+input, textarea {
   width: 100%;
   background: var(--input-bg);
   border: 1px solid var(--border-glass);
   color: var(--text-main);
   padding: 1rem 1.25rem;
-  border-radius: 12px;
-  font-family: inherit;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-main);
   font-size: 1rem;
   transition: var(--transition);
-  margin-bottom: 1.5rem;
 }
 
-input:focus,
-textarea:focus {
+input:focus, textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  background: var(--bg-glass-hover);
+  box-shadow: 0 0 0 3px var(--accent-dim);
 }
 
-/* Animations */
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
 @keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-15px);
-  }
-
-  100% {
-    transform: translateY(0px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-18px); }
 }
 
 @keyframes wave {
-  0% {
-    transform: rotate(0.0deg)
-  }
-
-  10% {
-    transform: rotate(14.0deg)
-  }
-
-  20% {
-    transform: rotate(-8.0deg)
-  }
-
-  30% {
-    transform: rotate(14.0deg)
-  }
-
-  40% {
-    transform: rotate(-4.0deg)
-  }
-
-  50% {
-    transform: rotate(10.0deg)
-  }
-
-  60% {
-    transform: rotate(0.0deg)
-  }
-
-  100% {
-    transform: rotate(0.0deg)
-  }
+  0%, 60%, 100% { transform: rotate(0deg); }
+  10%  { transform: rotate(14deg); }
+  20%  { transform: rotate(-8deg); }
+  30%  { transform: rotate(14deg); }
+  40%  { transform: rotate(-4deg); }
+  50%  { transform: rotate(10deg); }
 }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+@keyframes shine-sweep {
+  0%   { background-position: 200% center; }
+  100% { background-position: -100% center; }
 }
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--shadow-glow); }
+  50%       { box-shadow: 0 0 24px 6px var(--shadow-glow); }
+}
+
+@keyframes aurora {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes progress-fill {
+  from { width: 0; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.7; }
+}
+
+.animate-float { animation: float 6s ease-in-out infinite; }
 
 .wave-emoji {
   display: inline-block;
@@ -254,13 +361,22 @@ textarea:focus {
   transform-origin: 70% 70%;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .section-title {
-    font-size: 2.5rem;
-  }
+/* Scroll-triggered fade-up (JS adds .visible class) */
+.fade-up {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-  section {
-    padding: 4rem 0;
-  }
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .section-title  { font-size: 2.2rem; }
+  section         { padding: 5rem 0; }
+  .container      { padding: 0 1.25rem; }
 }

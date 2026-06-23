@@ -1,147 +1,589 @@
 <script setup>
-// Hero Section
+import { ref, onMounted, onUnmounted } from 'vue';
+
+// ── Typing animation ──
+const roles = [
+  'Full-Stack Developer',
+  'Vue.js Specialist',
+  'UI/UX Enthusiast',
+  'Problem Solver',
+];
+const displayedRole = ref('');
+const roleIndex     = ref(0);
+const charIndex     = ref(0);
+const isDeleting    = ref(false);
+let   typingTimer   = null;
+
+const type = () => {
+  const current = roles[roleIndex.value];
+  if (!isDeleting.value) {
+    displayedRole.value = current.slice(0, charIndex.value + 1);
+    charIndex.value++;
+    if (charIndex.value === current.length) {
+      isDeleting.value = true;
+      typingTimer = setTimeout(type, 1800);
+      return;
+    }
+  } else {
+    displayedRole.value = current.slice(0, charIndex.value - 1);
+    charIndex.value--;
+    if (charIndex.value === 0) {
+      isDeleting.value = false;
+      roleIndex.value  = (roleIndex.value + 1) % roles.length;
+    }
+  }
+  typingTimer = setTimeout(type, isDeleting.value ? 60 : 90);
+};
+
+// ── Stats counter ──
+const stats = [
+  { label: 'Năm kinh nghiệm', value: 2, suffix: '+' },
+  { label: 'Dự án hoàn thành', value: 20, suffix: '+' },
+  { label: 'Công nghệ sử dụng', value: 15, suffix: '+' },
+];
+
+const counted    = ref([0, 0, 0]);
+const countDone  = ref(false);
+
+const runCounter = () => {
+  if (countDone.value) return;
+  countDone.value = true;
+  stats.forEach((s, i) => {
+    let start = 0;
+    const step = Math.ceil(s.value / 40);
+    const tick = setInterval(() => {
+      start = Math.min(start + step, s.value);
+      counted.value[i] = start;
+      if (start >= s.value) clearInterval(tick);
+    }, 40);
+  });
+};
+
+// ── Canvas particles ──
+const canvasRef = ref(null);
+let   animFrame = null;
+
+const initParticles = (canvas) => {
+  const ctx     = canvas.getContext('2d');
+  let   W = canvas.width  = canvas.offsetWidth;
+  let   H = canvas.height = canvas.offsetHeight;
+
+  const particles = Array.from({ length: 60 }, () => ({
+    x:  Math.random() * W,
+    y:  Math.random() * H,
+    r:  Math.random() * 1.5 + 0.5,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    opacity: Math.random() * 0.5 + 0.1,
+  }));
+
+  const draw = () => {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(56, 189, 248, ${p.opacity})`;
+      ctx.fill();
+    });
+    // Draw lines
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 130) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(56, 189, 248, ${0.12 * (1 - dist / 130)})`;
+          ctx.lineWidth   = 0.7;
+          ctx.stroke();
+        }
+      }
+    }
+    animFrame = requestAnimationFrame(draw);
+  };
+
+  draw();
+
+  const resize = () => {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  };
+  window.addEventListener('resize', resize);
+};
+
+onMounted(() => {
+  typingTimer = setTimeout(type, 600);
+  if (canvasRef.value) initParticles(canvasRef.value);
+
+  // Trigger counter when hero is in view
+  const heroEl = document.getElementById('hero');
+  if (heroEl) {
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { runCounter(); obs.disconnect(); }
+    }, { threshold: 0.4 });
+    obs.observe(heroEl);
+  }
+});
+
+onUnmounted(() => {
+  clearTimeout(typingTimer);
+  if (animFrame) cancelAnimationFrame(animFrame);
+});
 </script>
 
 <template>
   <section id="hero" class="hero-section">
-    <div class="bg-glow top-right"></div>
+    <!-- Particle Canvas -->
+    <canvas ref="canvasRef" class="hero-canvas"></canvas>
+
     <div class="container hero-content">
-      <div class="hero-text">
-        <span class="badge">Sẵn sàng nhận việc</span>
+      <!-- Left: Text -->
+      <div class="hero-text fade-up visible">
+        <div class="badge">
+          <span class="dot"></span>
+          Sẵn sàng nhận dự án mới
+        </div>
+
         <h1 class="hero-title">
-          Xin chào, tôi là <br />
-          <span class="text-gradient">Lập trình viên Full-Stack</span> <span class="wave-emoji">👋</span>
+          Xin chào, tôi là<br/>
+          <span class="text-gradient typing-wrapper">
+            {{ displayedRole }}<span class="cursor">|</span>
+          </span>
+          <span class="wave-emoji">👋</span>
         </h1>
+
         <p class="hero-subtitle">
-          Tôi xây dựng các trải nghiệm web cao cấp, nhanh chóng và dễ tiếp cận, kết hợp hoàn hảo giữa thiết kế tinh tế và công nghệ hiện đại.
+          Tôi xây dựng các trải nghiệm web <strong>cao cấp</strong>, nhanh chóng và dễ tiếp cận —
+          kết hợp hoàn hảo giữa thiết kế tinh tế và công nghệ hiện đại.
         </p>
+
+        <!-- Actions -->
         <div class="hero-actions">
-          <a href="#projects" class="btn btn-primary">
+          <a href="#projects" class="btn btn-primary" id="hero-cta-projects">
             Xem Sản Phẩm <i class="fa-solid fa-arrow-right"></i>
           </a>
-          <div class="social-links">
-            <a href="https://github.com/cornhuy04" class="social-icon"><i class="fa-brands fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/ngo-van-gia-huy04" class="social-icon"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="https://www.facebook.com/em.an.com.chua.UwU" class="social-icon"><i class="fa-brands fa-facebook"></i></a>
-          </div>
+          <a href="#contact" class="btn btn-outline" id="hero-cta-contact">
+            Liên Hệ Ngay
+          </a>
+        </div>
+
+        <!-- Social Icons -->
+        <div class="social-links">
+          <a href="https://github.com/cornhuy04" class="social-icon" target="_blank" rel="noopener" aria-label="GitHub">
+            <i class="fa-brands fa-github"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/ngo-van-gia-huy04" class="social-icon" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <i class="fa-brands fa-linkedin"></i>
+          </a>
+          <a href="https://www.facebook.com/em.an.com.chua.UwU" class="social-icon" target="_blank" rel="noopener" aria-label="Facebook">
+            <i class="fa-brands fa-facebook"></i>
+          </a>
         </div>
       </div>
-      <div class="hero-visual animate-float">
-        <div class="glass-card visual-card">
-          <div class="code-block">
-            <span class="keyword">const</span> <span class="variable">developer</span> = {<br>
-            &nbsp;&nbsp;skills: [<span class="string">'Vue.js'</span>, <span class="string">'Vite'</span>, <span class="string">'CSS'</span>],<br>
-            &nbsp;&nbsp;passion: <span class="string">'Giao diện tinh tế'</span><br>
-            };
+
+      <!-- Right: Visual -->
+      <div class="hero-visual">
+        <!-- Avatar ring -->
+        <div class="avatar-ring">
+          <div class="avatar-inner">
+            <i class="fa-solid fa-code avatar-icon"></i>
+          </div>
+          <svg class="ring-svg" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="90" class="ring-track"/>
+            <circle cx="100" cy="100" r="90" class="ring-progress"/>
+          </svg>
+        </div>
+
+        <!-- Code card -->
+        <div class="glass-card code-card animate-float">
+          <div class="code-header">
+            <div class="code-dots">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+            </div>
+            <span class="code-filename">developer.js</span>
+          </div>
+          <div class="code-body">
+            <div class="code-line"><span class="ln">1</span> <span class="keyword">const</span> <span class="variable">developer</span> = {</div>
+            <div class="code-line"><span class="ln">2</span>   <span class="property">name</span>: <span class="string">'Gia Huy'</span>,</div>
+            <div class="code-line"><span class="ln">3</span>   <span class="property">skills</span>: [<span class="string">'Vue'</span>, <span class="string">'Node'</span>, <span class="string">'Vite'</span>],</div>
+            <div class="code-line"><span class="ln">4</span>   <span class="property">passion</span>: <span class="string">'Giao diện tinh tế'</span>,</div>
+            <div class="code-line"><span class="ln">5</span>   <span class="property">available</span>: <span class="keyword">true</span></div>
+            <div class="code-line"><span class="ln">6</span> };</div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-item" v-for="(s, i) in stats" :key="i">
+            <span class="stat-val">{{ counted[i] }}{{ s.suffix }}</span>
+            <span class="stat-label">{{ s.label }}</span>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Scroll indicator -->
+    <a href="#about" class="scroll-indicator" aria-label="Cuộn xuống">
+      <div class="scroll-mouse">
+        <div class="scroll-dot"></div>
+      </div>
+    </a>
   </section>
 </template>
 
 <style scoped>
+/* ── Section ── */
 .hero-section {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding-top: 80px;
+  padding-top: 90px;
+  padding-bottom: 4rem;
+  position: relative;
+  overflow: hidden;
 }
 
+/* ── Canvas ── */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Grid ── */
 .hero-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 5rem;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
+/* ── Badge ── */
 .badge {
-  display: inline-block;
-  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1.1rem;
   background: var(--bg-glass);
   border: 1px solid var(--border-glass);
-  border-radius: 20px;
-  font-size: 0.875rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
   font-weight: 500;
   margin-bottom: 2rem;
   color: var(--text-muted);
+  backdrop-filter: blur(8px);
 }
 
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-green);
+  box-shadow: 0 0 8px var(--neon-green);
+  animation: dot-pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* ── Title ── */
 .hero-title {
-  font-size: 4.5rem;
+  font-size: clamp(2.8rem, 5vw, 4.8rem);
   margin-bottom: 1.5rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.typing-wrapper {
+  display: inline-block;
+  min-width: 2px;
+}
+
+.cursor {
+  animation: blink 1s step-end infinite;
+  color: var(--accent);
+  font-weight: 300;
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   color: var(--text-muted);
-  max-width: 500px;
+  max-width: 520px;
   margin-bottom: 2.5rem;
+  line-height: 1.75;
 }
 
+.hero-subtitle strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+/* ── Actions ── */
 .hero-actions {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
 }
 
+/* ── Social ── */
 .social-links {
   display: flex;
-  gap: 1rem;
+  gap: 0.85rem;
 }
 
 .social-icon {
-  width: 45px;
-  height: 45px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--bg-glass);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-main);
+  color: var(--text-muted);
   text-decoration: none;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   transition: var(--transition);
   border: 1px solid var(--border-glass);
 }
 
 .social-icon:hover {
-  background: var(--accent);
+  background: var(--accent-gradient);
   color: #fff;
-  transform: translateY(-3px);
-  border-color: var(--accent);
+  transform: translateY(-4px) scale(1.05);
+  border-color: transparent;
+  box-shadow: 0 8px 20px var(--shadow-glow);
 }
 
-.visual-card {
-  padding: 3rem;
+/* ── Visual Column ── */
+.hero-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+}
+
+/* ── Avatar Ring ── */
+.avatar-ring {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  flex-shrink: 0;
+}
+
+.avatar-inner {
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: var(--card-gradient);
+  border: 2px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.avatar-icon {
+  font-size: 3.5rem;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ring-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: spin-slow 8s linear infinite;
+}
+
+.ring-track {
+  fill: none;
+  stroke: var(--border-glass);
+  stroke-width: 2;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: url(#ringGrad);
+  stroke-width: 2;
+  stroke-dasharray: 565;
+  stroke-dashoffset: 200;
+  stroke-linecap: round;
+}
+
+/* ── Code Card ── */
+.code-card {
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--border-glass);
+  background: rgba(0,0,0,0.15);
+}
+
+.code-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dot-red, .dot-yellow, .dot-green {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.dot-red    { background: #ff5f57; }
+.dot-yellow { background: #febc2e; }
+.dot-green  { background: #28c840; }
+
+.code-filename {
+  font-family: var(--font-code);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.code-body {
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-code);
+  font-size: 0.9rem;
+  line-height: 1.9;
+}
+
+.code-line {
+  display: flex;
+  gap: 1rem;
+}
+
+.ln {
+  color: var(--text-dim);
+  user-select: none;
+  min-width: 1ch;
+  text-align: right;
+}
+
+.keyword  { color: #f472b6; }
+.variable { color: #38bdf8; }
+.property { color: #a78bfa; }
+.string   { color: #4ade80; }
+
+:root[data-theme="light"] .keyword  { color: #db2777; }
+:root[data-theme="light"] .variable { color: #0284c7; }
+:root[data-theme="light"] .property { color: #7c3aed; }
+:root[data-theme="light"] .string   { color: #16a34a; }
+
+/* ── Stats Row ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1rem 0.5rem;
   background: var(--bg-glass);
   border: 1px solid var(--border-glass);
-  box-shadow: 0 25px 50px -12px var(--shadow-color);
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(8px);
+  transition: var(--transition);
 }
 
-.code-block {
-  font-family: 'Fira Code', monospace;
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: var(--text-main);
+.stat-item:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
 }
 
-.keyword { color: #f472b6; }
-.variable { color: #38bdf8; }
-.string { color: #a3e635; }
+.stat-val {
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
 
-:root[data-theme="light"] .keyword { color: #db2777; }
-:root[data-theme="light"] .variable { color: #0284c7; }
-:root[data-theme="light"] .string { color: #65a30d; }
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: center;
+  font-weight: 500;
+}
 
+/* ── Scroll Indicator ── */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  animation: float 3s ease-in-out infinite;
+}
+
+.scroll-mouse {
+  width: 24px;
+  height: 40px;
+  border: 2px solid var(--border-glass-hover);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.scroll-dot {
+  width: 4px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 2px;
+  animation: float 1.5s ease-in-out infinite;
+}
+
+/* ── Responsive ── */
 @media (max-width: 992px) {
   .hero-content {
     grid-template-columns: 1fr;
     text-align: center;
   }
-  .hero-subtitle { margin: 0 auto 2.5rem auto; }
-  .hero-actions { justify-content: center; flex-direction: column; }
-  .hero-title { font-size: 3.5rem; }
+  .hero-subtitle   { margin: 0 auto 2.5rem; }
+  .hero-actions    { justify-content: center; }
+  .social-links    { justify-content: center; }
+  .hero-visual     { order: -1; }
+  .stats-row       { max-width: 400px; margin: 0 auto; }
+  .scroll-indicator { display: none; }
+}
+
+@media (max-width: 480px) {
+  .hero-actions { flex-direction: column; width: 100%; }
+  .btn { width: 100%; justify-content: center; }
 }
 </style>
