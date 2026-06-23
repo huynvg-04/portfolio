@@ -139,7 +139,7 @@ onMounted(() => {
 /* ── Cards ── */
 .about-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -273,11 +273,37 @@ onMounted(() => {
 }
 
 /* ── Responsive ── */
+/* Tablet ≤ 900px */
 @media (max-width: 900px) {
   .skills-tech-grid { grid-template-columns: 1fr; }
+  .tech-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
-@media (max-width: 600px) {
-  .tech-grid { grid-template-columns: repeat(4, 1fr); }
+/* Mobile ≤ 768px */
+@media (max-width: 768px) {
+  .about-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  .tech-grid  { grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+  .tech-icon  { width: 44px; height: 44px; font-size: 1.25rem; }
+  .sub-heading { font-size: 1rem; margin-bottom: 1.5rem; }
+}
+
+/* Small Mobile ≤ 480px */
+@media (max-width: 480px) {
+  .about-grid { gap: 1rem; }
+  .tech-grid  { grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+  .tech-icon  { width: 40px; height: 40px; font-size: 1.1rem; border-radius: 10px; }
+  .tech-item  { font-size: 0.7rem; gap: 0.35rem; }
+  .card-icon-wrap { width: 46px; height: 46px; font-size: 1.25rem; }
+  .about-card h3  { font-size: 1.1rem; }
+  .about-card p   { font-size: 0.88rem; }
+  .skill-name { font-size: 0.85rem; }
+  .skill-pct  { font-size: 0.8rem; }
+}
+
+/* Very Small ≤ 360px */
+@media (max-width: 360px) {
+  .tech-grid { grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+  .tech-icon { width: 36px; height: 36px; font-size: 1rem; border-radius: 8px; }
+  .tech-item { font-size: 0.65rem; }
 }
 </style>

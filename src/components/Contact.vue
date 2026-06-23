@@ -150,7 +150,7 @@ const submit = async () => {
 }
 
 .info-card h3 {
-  font-size: 1.7rem;
+  font-size: clamp(1.3rem, 3.5vw, 1.7rem);
   line-height: 1.3;
 }
 
@@ -316,8 +316,40 @@ input:disabled, textarea:disabled { opacity: 0.6; cursor: not-allowed; }
 }
 
 /* ── Responsive ── */
+/* Tablet ≤ 900px */
 @media (max-width: 900px) {
-  .contact-layout { grid-template-columns: 1fr; }
+  .contact-layout { grid-template-columns: 1fr; gap: 1.5rem; }
   .field-group    { grid-template-columns: 1fr; }
+  .info-card      { height: auto; }
+}
+
+/* Mobile ≤ 768px */
+@media (max-width: 768px) {
+  .contact-layout { gap: 1.25rem; }
+  .info-card      { gap: 1.5rem; }
+  .info-items     { gap: 1rem; }
+  .social-row     { gap: 0.6rem; }
+  .social-big     { padding: 0.55rem 0.9rem; font-size: 0.82rem; }
+  .form-title     { font-size: 1.1rem; }
+  .submit-btn     { padding: 0.875rem 1.75rem; font-size: 0.95rem; }
+}
+
+/* Small Mobile ≤ 480px */
+@media (max-width: 480px) {
+  .info-sub   { font-size: 0.88rem; }
+  .info-icon  { width: 40px; height: 40px; font-size: 1rem; }
+  .info-label { font-size: 0.7rem; }
+  .info-value { font-size: 0.88rem; }
+  .social-big { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
+  .field-group { gap: 0.75rem; }
+  .field      { gap: 0.4rem; margin-bottom: 0.75rem; }
+  textarea    { min-height: 100px; }
+}
+
+/* Very Small ≤ 360px */
+@media (max-width: 360px) {
+  .social-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .social-big { width: 100%; justify-content: center; }
+  .info-item  { gap: 0.75rem; }
 }
 </style>

@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 
-// ── Typing animation ──
 const roles = [
   'Full-Stack Developer',
   'Vue.js Specialist',
@@ -299,7 +298,7 @@ onUnmounted(() => {
 
 /* ── Title ── */
 .hero-title {
-  font-size: clamp(2.8rem, 5vw, 4.8rem);
+  font-size: clamp(2.2rem, 5vw, 4.8rem);
   margin-bottom: 1.5rem;
   letter-spacing: -0.03em;
   line-height: 1.1;
@@ -317,7 +316,7 @@ onUnmounted(() => {
 }
 
 .hero-subtitle {
-  font-size: 1.15rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
   color: var(--text-muted);
   max-width: 520px;
   margin-bottom: 2.5rem;
@@ -569,21 +568,64 @@ onUnmounted(() => {
 }
 
 /* ── Responsive ── */
+/* Tablet ≤ 992px */
 @media (max-width: 992px) {
   .hero-content {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: 3rem;
   }
   .hero-subtitle   { margin: 0 auto 2.5rem; }
   .hero-actions    { justify-content: center; }
   .social-links    { justify-content: center; }
   .hero-visual     { order: -1; }
-  .stats-row       { max-width: 400px; margin: 0 auto; }
+  .stats-row       { max-width: 420px; margin: 0 auto; }
   .scroll-indicator { display: none; }
 }
 
+/* Mobile ≤ 768px */
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: 80px;
+    padding-bottom: 3rem;
+    min-height: 100svh;
+  }
+  .hero-content { gap: 2.5rem; }
+  .badge { font-size: 0.78rem; padding: 0.4rem 0.9rem; }
+  .avatar-ring { width: 130px; height: 130px; }
+  .avatar-icon { font-size: 2.8rem; }
+  .code-body { font-size: 0.82rem; padding: 1rem 1.25rem; }
+  .stat-val { font-size: 1.4rem; }
+  .stat-label { font-size: 0.68rem; }
+  .hero-actions { gap: 0.75rem; }
+}
+
+/* Small Mobile ≤ 480px */
 @media (max-width: 480px) {
+  .hero-section { padding-top: 75px; }
   .hero-actions { flex-direction: column; width: 100%; }
-  .btn { width: 100%; justify-content: center; }
+  .hero-actions .btn { width: 100%; justify-content: center; }
+  .badge { font-size: 0.75rem; padding: 0.35rem 0.85rem; }
+  .avatar-ring { width: 110px; height: 110px; }
+  .avatar-icon { font-size: 2.4rem; }
+  .stats-row { grid-template-columns: repeat(3, 1fr); gap: 0.6rem; max-width: 100%; }
+  .stat-item { padding: 0.75rem 0.25rem; }
+  .stat-val { font-size: 1.25rem; }
+  .stat-label { font-size: 0.62rem; }
+  .code-body { font-size: 0.78rem; padding: 0.85rem 1rem; line-height: 1.7; }
+  .social-links { gap: 0.6rem; }
+  .social-icon { width: 40px; height: 40px; font-size: 1rem; }
+}
+
+/* Very Small ≤ 360px */
+@media (max-width: 360px) {
+  .hero-content { gap: 2rem; }
+  .avatar-ring { width: 100px; height: 100px; }
+  .avatar-icon { font-size: 2rem; }
+  .stats-row { gap: 0.5rem; }
+  .stat-item { padding: 0.6rem 0.15rem; }
+  .stat-val { font-size: 1.1rem; }
+  .stat-label { font-size: 0.58rem; }
+  .code-body { padding: 0.75rem 0.875rem; font-size: 0.72rem; }
 }
 </style>
