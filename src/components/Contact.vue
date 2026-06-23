@@ -5,7 +5,7 @@ const form = ref({ name: '', email: '', message: '' });
 const status = ref('idle'); // idle | loading | success | error
 
 const socials = [
-  { icon: 'fa-brands fa-github',   href: 'https://github.com/cornhuy04',                      label: 'GitHub',   color: '#e2e8f0' },
+  { icon: 'fa-brands fa-github',   href: 'https://github.com/huynvg-04',                      label: 'GitHub',   color: '#e2e8f0' },
   { icon: 'fa-brands fa-linkedin', href: 'https://www.linkedin.com/in/ngo-van-gia-huy04',     label: 'LinkedIn', color: '#0a66c2' },
   { icon: 'fa-brands fa-facebook', href: 'https://www.facebook.com/em.an.com.chua.UwU',       label: 'Facebook', color: '#1877f2' },
 ];
