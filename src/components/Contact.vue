@@ -33,7 +33,7 @@ const submit = async () => {
         <!-- Left: Info -->
         <div class="contact-info flip-in-left" data-flip-delay="200">
           <div class="glass-card info-card">
-            <h3>Hãy cùng nhau xây dựng<br><span class="text-gradient">điều tuyệt vời</span> 🚀</h3>
+            <h3>Hãy cùng nhau xây dựng<br><span class="text-gradient">điều tuyệt vời</span></h3>
             <p class="info-sub">
               Tôi có thể nhận dự án freelance và sẵn sàng tham gia vào đội nhóm có văn hóa phát triển tốt.
             </p>
@@ -54,7 +54,7 @@ const submit = async () => {
                 </div>
                 <div>
                   <span class="info-label">Địa chỉ</span>
-                  <span class="info-value">Hà Nội, Việt Nam 🇻🇳</span>
+                  <span class="info-value">Hà Nội, Việt Nam</span>
                 </div>
               </div>
               <div class="info-item">

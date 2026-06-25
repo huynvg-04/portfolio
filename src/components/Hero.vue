@@ -2,10 +2,10 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 
 const roles = [
-  'Full-Stack Developer',
-  'Vue.js Specialist',
-  'UI/UX Enthusiast',
-  'Problem Solver',
+  'Fresh Full-Stack Developer',
+  'PHP & Laravel Developer',
+  'Vue.js Developer',
+  'Fresh Graduate Web Developer',
 ];
 const displayedRole = ref('');
 const roleIndex     = ref(0);
@@ -36,9 +36,9 @@ const type = () => {
 
 // ── Stats counter ──
 const stats = [
-  { label: 'Năm kinh nghiệm', value: 2, suffix: '+' },
-  { label: 'Dự án hoàn thành', value: 20, suffix: '+' },
-  { label: 'Công nghệ sử dụng', value: 15, suffix: '+' },
+  { label: 'Kinh nghiệm thực tế', value: 1, suffix: ' năm+' },
+  { label: 'Dự án', value: 3 },
+  { label: 'Công nghệ nắm vững', value: 12, suffix: '+' },
 ];
 
 const counted    = ref([0, 0, 0]);
@@ -154,12 +154,10 @@ onUnmounted(() => {
           <span class="text-gradient typing-wrapper">
             {{ displayedRole }}<span class="cursor">|</span>
           </span>
-          <span class="wave-emoji">👋</span>
         </h1>
 
         <p class="hero-subtitle fade-up visible" data-delay="200">
-          Tôi xây dựng các trải nghiệm web <strong>cao cấp</strong>, nhanh chóng và dễ tiếp cận —
-          kết hợp hoàn hảo giữa thiết kế tinh tế và công nghệ hiện đại.
+          Là một lập trình viên mới tốt nghiệp, tôi tập trung xây dựng các trải nghiệm web tối ưu, nhanh chóng và thân thiện — kết hợp công nghệ hiện đại với tư duy thiết kế sáng tạo.
         </p>
 
         <!-- Actions -->
@@ -212,7 +210,7 @@ onUnmounted(() => {
           <div class="code-body">
             <div class="code-line"><span class="ln">1</span> <span class="keyword">const</span> <span class="variable">developer</span> = {</div>
             <div class="code-line"><span class="ln">2</span>   <span class="property">name</span>: <span class="string">'Gia Huy'</span>,</div>
-            <div class="code-line"><span class="ln">3</span>   <span class="property">skills</span>: [<span class="string">'Vue'</span>, <span class="string">'Node'</span>, <span class="string">'Vite'</span>],</div>
+            <div class="code-line"><span class="ln">3</span>   <span class="property">skills</span>: [<span class="string">'PHP'</span>, <span class="string">'Laravel'</span>, <span class="string">'Vue'</span>],</div>
             <div class="code-line"><span class="ln">4</span>   <span class="property">passion</span>: <span class="string">'Giao diện tinh tế'</span>,</div>
             <div class="code-line"><span class="ln">5</span>   <span class="property">available</span>: <span class="keyword">true</span></div>
             <div class="code-line"><span class="ln">6</span> };</div>
@@ -298,7 +296,7 @@ onUnmounted(() => {
 
 /* ── Title ── */
 .hero-title {
-  font-size: clamp(2.2rem, 5vw, 4.8rem);
+  font-size: clamp(1.25rem, 5vw, 3.75rem);
   margin-bottom: 1.5rem;
   letter-spacing: -0.03em;
   line-height: 1.1;

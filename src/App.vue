@@ -1,12 +1,11 @@
-﻿<script setup>
+<script setup>
 import Navbar from './components/Navbar.vue';
 import Hero from './components/Hero.vue';
 import About from './components/About.vue';
 import Projects from './components/Projects.vue';
 import Contact from './components/Contact.vue';
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
-// ── Split Text helper ──
 const splitAndAnimate = (selector) => {
   document.querySelectorAll(selector).forEach(el => {
     if (el.dataset.split) return;
@@ -30,6 +29,14 @@ const splitAndAnimate = (selector) => {
 };
 
 let scrollTicking = false;
+
+const mouseX = ref(window.innerWidth / 2);
+const mouseY = ref(window.innerHeight / 2);
+
+const handleMouseMove = (e) => {
+  mouseX.value = e.clientX;
+  mouseY.value = e.clientY;
+};
 
 onMounted(() => {
   // ── Fade animations ──
@@ -71,6 +78,12 @@ onMounted(() => {
       scrollTicking = false;
     });
   }, { passive: true });
+
+  window.addEventListener('mousemove', handleMouseMove, { passive: true });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('mousemove', handleMouseMove);
 });
 
 const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -78,6 +91,9 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
 <template>
   <div class="app-wrapper">
+    <!-- Inverted Color Cursor Glow -->
+    <div class="cursor-glow" :style="{ transform: `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)` }"></div>
+
     <div class="bg-glow bg-glow-1"></div>
     <div class="bg-glow bg-glow-2"></div>
 
@@ -90,17 +106,17 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
         <div class="marquee-track">
           <div class="marquee-content">
             <span>Full-Stack Developer</span><span class="mdot">✦</span>
+            <span>PHP &amp; Laravel</span><span class="mdot">✦</span>
             <span>Vue.js Specialist</span><span class="mdot">✦</span>
-            <span>UI/UX Enthusiast</span><span class="mdot">✦</span>
-            <span>Problem Solver</span><span class="mdot">✦</span>
+            <span>Fresh Graduate</span><span class="mdot">✦</span>
             <span>Creative Coder</span><span class="mdot">✦</span>
             <span>Open to Work</span><span class="mdot">✦</span>
           </div>
           <div class="marquee-content" aria-hidden="true">
             <span>Full-Stack Developer</span><span class="mdot">✦</span>
+            <span>PHP &amp; Laravel</span><span class="mdot">✦</span>
             <span>Vue.js Specialist</span><span class="mdot">✦</span>
-            <span>UI/UX Enthusiast</span><span class="mdot">✦</span>
-            <span>Problem Solver</span><span class="mdot">✦</span>
+            <span>Fresh Graduate</span><span class="mdot">✦</span>
             <span>Creative Coder</span><span class="mdot">✦</span>
             <span>Open to Work</span><span class="mdot">✦</span>
           </div>
@@ -147,7 +163,7 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
         <p class="footer-copy">
           &copy; 2026 Ng&ocirc; V&#259;n Gia Huy &mdash; Thi&#7871;t k&#7871; v&#7899;i
           <i class="fa-solid fa-heart" style="color:#f472b6; margin: 0 3px;"></i>
-          &amp; nhi&#7873;u c&agrave; ph&ecirc; &#9749;
+          &amp; nhi&#7873;u c&agrave; ph&ecirc;
         </p>
         <button class="back-to-top" @click="scrollTop" aria-label="L&#234;n &#273;&#7847;u trang" id="back-to-top">
           <i class="fa-solid fa-arrow-up"></i>
@@ -160,6 +176,23 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
 <style>
 .app-wrapper { min-height: 100vh; position: relative; }
+
+/* ── Cursor Glow ── */
+.cursor-glow {
+  position: fixed;
+  top: 0; left: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgb(214, 173, 255);
+  box-shadow: 0 0 20px 2px rgb(214, 173, 255);
+  filter: blur(4px);
+  pointer-events: none;
+  mix-blend-mode: difference;
+  z-index: 9999;
+  will-change: transform;
+  transition: transform 0.15s ease-out;
+}
 
 /* ── Split Text Animation ── */
 .split-char {

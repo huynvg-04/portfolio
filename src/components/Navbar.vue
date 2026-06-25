@@ -2,18 +2,13 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 
 const isScrolled    = ref(false);
-const theme         = ref('dark');
 const menuOpen      = ref(false);
 const scrollProgress= ref(0);
 const activeSection = ref('hero');
 
 const sections = ['hero', 'about', 'projects', 'contact'];
 
-const toggleTheme = () => {
-  theme.value = theme.value === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', theme.value);
-  localStorage.setItem('portfolio-theme', theme.value);
-};
+
 
 const toggleMenu = () => { menuOpen.value = !menuOpen.value; };
 const closeMenu  = () => { menuOpen.value = false; };
@@ -36,11 +31,7 @@ const handleScroll = () => {
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true });
 
-  const saved = localStorage.getItem('portfolio-theme');
-  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-  const resolved = saved || (prefersLight ? 'light' : 'dark');
-  theme.value = resolved;
-  document.documentElement.setAttribute('data-theme', resolved);
+
 });
 
 onUnmounted(() => window.removeEventListener('scroll', handleScroll));
@@ -51,7 +42,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   <div class="scroll-progress" :style="{ width: scrollProgress + '%' }"></div>
 
   <nav :class="['navbar', { 'scrolled': isScrolled }]">
-    <div class="container nav-content">
+    <div class="nav-content">
       <!-- Logo -->
       <a href="#hero" class="logo" @click="closeMenu">
         <span class="logo-bracket">&lt;</span>
@@ -70,11 +61,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 
       <!-- Actions -->
       <div class="nav-actions">
-        <button class="theme-toggle" @click="toggleTheme"
-          :aria-label="theme === 'dark' ? 'Chuyển sang nền sáng' : 'Chuyển sang nền tối'">
-          <i v-if="theme === 'dark'" class="fa-solid fa-sun"></i>
-          <i v-else class="fa-solid fa-moon"></i>
-        </button>
+
         <a href="#contact" class="btn btn-outline nav-cta" @click="closeMenu">Kết Nối Ngay</a>
         <!-- Hamburger -->
         <button class="hamburger" @click="toggleMenu" :aria-expanded="menuOpen" aria-label="Menu">
@@ -136,17 +123,17 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   border-bottom-color: var(--border-glass);
 }
 
-:root[data-theme="dark"] .navbar.scrolled {
-  background: rgba(7, 8, 13, 0.88);
-}
-:root[data-theme="light"] .navbar.scrolled {
-  background: rgba(243, 246, 255, 0.9);
+.navbar.scrolled {
+  background: rgba(5, 4, 5, 0.88);
 }
 
 .nav-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 0;
+  width: 100%;
+  padding: 0 3rem;
 }
 
 /* ── Logo ── */
@@ -217,28 +204,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   font-size: 0.9rem;
 }
 
-/* ── Theme Toggle ── */
-.theme-toggle {
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
-  color: var(--text-main);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-  font-size: 1rem;
-}
 
-.theme-toggle:hover {
-  background: var(--bg-glass-hover);
-  color: var(--accent);
-  border-color: var(--accent);
-  box-shadow: 0 0 16px var(--shadow-glow);
-}
 
 /* ── Hamburger ── */
 .hamburger {
@@ -327,6 +293,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
+  .nav-content { padding: 0 1.5rem; }
   .nav-links { display: none; }
   .nav-cta   { display: none; }
   .hamburger { display: flex; }
@@ -337,7 +304,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 
 @media (max-width: 480px) {
   .logo { font-size: 1.2rem; }
-  .theme-toggle { width: 36px; height: 36px; font-size: 0.9rem; }
   .hamburger { padding: 4px; }
 }
 

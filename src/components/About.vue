@@ -2,20 +2,20 @@
 import { ref, onMounted } from 'vue';
 
 const skills = [
-  { name: 'Vue.js / Nuxt',    level: 92, color: '#42b883' },
-  { name: 'JavaScript / TS',  level: 88, color: '#38bdf8' },
-  { name: 'Node.js / Express',level: 78, color: '#a78bfa' },
-  { name: 'CSS / Tailwind',   level: 90, color: '#f472b6' },
-  { name: 'Vite / Webpack',   level: 82, color: '#fb923c' },
+  { name: 'PHP / Laravel',    level: 85, color: '#777bb4' },
+  { name: 'Vue.js / Nuxt',    level: 88, color: '#42b883' },
+  { name: 'JavaScript / TS',  level: 85, color: '#38bdf8' },
+  { name: 'Node.js / Express',level: 75, color: '#a78bfa' },
+  { name: 'CSS / Tailwind',   level: 88, color: '#f472b6' },
 ];
 
 const tech = [
+  { icon: 'fa-brands fa-php',      label: 'PHP',      color: '#777bb4' },
+  { icon: 'fa-brands fa-laravel',  label: 'Laravel',  color: '#ff2d20' },
   { icon: 'fa-brands fa-vuejs',    label: 'Vue',      color: '#42b883' },
   { icon: 'fa-brands fa-js',       label: 'JS/TS',    color: '#f7df1e' },
   { icon: 'fa-brands fa-node-js',  label: 'Node',     color: '#68a063' },
-  { icon: 'fa-brands fa-react',    label: 'React',    color: '#61dafb' },
   { icon: 'fa-brands fa-git-alt',  label: 'Git',      color: '#f05032' },
-  { icon: 'fa-brands fa-docker',   label: 'Docker',   color: '#2496ed' },
   { icon: 'fa-solid fa-database',  label: 'SQL',      color: '#fb923c' },
   { icon: 'fa-brands fa-figma',    label: 'Figma',    color: '#a259ff' },
 ];
@@ -76,8 +76,8 @@ onMounted(() => {
     <div class="container">
       <h2 class="section-title flip-in-bottom">Về <span class="text-gradient">Tôi</span></h2>
       <p class="section-subtitle flip-in-bottom" data-flip-delay="150">
-        Một lập trình viên đam mê kiến tạo những sản phẩm số có ý nghĩa,
-        kết hợp kỹ thuật vững chắc với tư duy thiết kế sáng tạo.
+        Một lập trình viên mới tốt nghiệp đam mê kiến tạo những sản phẩm số chất lượng,
+        kết hợp kỹ thuật vững chắc với tư duy giải quyết vấn đề sáng tạo.
       </p>
 
       <!-- Cards -->
