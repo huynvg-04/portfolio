@@ -19,7 +19,6 @@ const handleScroll = () => {
   isScrolled.value    = scrollY > 60;
   scrollProgress.value = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
 
-  // Active section detection
   for (const id of sections) {
     const el = document.getElementById(id);
     if (!el) continue;
@@ -38,19 +37,16 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 </script>
 
 <template>
-  <!-- Scroll Progress Bar -->
   <div class="scroll-progress" :style="{ width: scrollProgress + '%' }"></div>
 
   <nav :class="['navbar', { 'scrolled': isScrolled }]">
     <div class="nav-content">
-      <!-- Logo -->
       <a href="#hero" class="logo" @click="closeMenu">
         <span class="logo-bracket">&lt;</span>
         <span class="text-gradient">huynvg-04</span>
         <span class="logo-bracket">/&gt;</span>
       </a>
 
-      <!-- Desktop Nav -->
       <ul class="nav-links">
         <li v-for="s in [['#about','Giới Thiệu'],['#projects','Dự Án'],['#contact','Liên Hệ']]" :key="s[0]">
           <a :href="s[0]" :class="{ active: activeSection === s[0].slice(1) }">
@@ -59,11 +55,9 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
         </li>
       </ul>
 
-      <!-- Actions -->
       <div class="nav-actions">
 
         <a href="#contact" class="btn btn-outline nav-cta" @click="closeMenu">Kết Nối Ngay</a>
-        <!-- Hamburger -->
         <button class="hamburger" @click="toggleMenu" :aria-expanded="menuOpen" aria-label="Menu">
           <span :class="{ open: menuOpen }"></span>
           <span :class="{ open: menuOpen }"></span>
@@ -73,7 +67,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
     </div>
   </nav>
 
-  <!-- Mobile Drawer -->
   <div :class="['mobile-drawer', { open: menuOpen }]" @click.self="closeMenu">
     <div class="drawer-content">
       <ul>
@@ -87,7 +80,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 </template>
 
 <style scoped>
-/* ── Scroll Progress Bar ── */
 .scroll-progress {
   position: fixed;
   top: 0;
@@ -100,7 +92,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   box-shadow: 0 0 10px var(--shadow-glow);
 }
 
-/* ── Navbar ── */
 .navbar {
   position: fixed;
   top: 0;
@@ -136,7 +127,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   padding: 0 3rem;
 }
 
-/* ── Logo ── */
 .logo {
   font-size: 1.4rem;
   font-weight: 800;
@@ -153,7 +143,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   font-family: var(--font-code);
 }
 
-/* ── Nav Links ── */
 .nav-links {
   display: flex;
   gap: 2.5rem;
@@ -192,7 +181,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   width: 100%;
 }
 
-/* ── Nav Actions ── */
 .nav-actions {
   display: flex;
   align-items: center;
@@ -206,7 +194,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 
 
 
-/* ── Hamburger ── */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -231,7 +218,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 .hamburger span.open:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .hamburger span.open:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* ── Mobile Drawer ── */
 .mobile-drawer {
   display: none;
   position: fixed;
@@ -291,7 +277,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 
 .drawer-cta { justify-content: center; width: 100%; }
 
-/* ── Responsive ── */
 @media (max-width: 768px) {
   .nav-content { padding: 0 1.5rem; }
   .nav-links { display: none; }

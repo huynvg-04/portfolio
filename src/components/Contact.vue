@@ -12,7 +12,6 @@ const socials = [
 
 const submit = async () => {
   status.value = 'loading';
-  // Simulate async send
   await new Promise(r => setTimeout(r, 1500));
   status.value = 'success';
   form.value = { name: '', email: '', message: '' };
@@ -30,7 +29,6 @@ const submit = async () => {
       </p>
 
       <div class="contact-layout">
-        <!-- Left: Info -->
         <div class="contact-info flip-in-left" data-flip-delay="200">
           <div class="glass-card info-card">
             <h3>Hãy cùng nhau xây dựng<br><span class="text-gradient">điều tuyệt vời</span></h3>
@@ -68,7 +66,6 @@ const submit = async () => {
               </div>
             </div>
 
-            <!-- Social Links -->
             <div class="social-row">
               <a
                 v-for="s in socials" :key="s.label"
@@ -84,7 +81,6 @@ const submit = async () => {
           </div>
         </div>
 
-        <!-- Right: Form -->
         <div class="contact-form-wrap flip-in-right" data-flip-delay="300">
           <div class="glass-card form-card">
             <h3 class="form-title"><i class="fa-solid fa-paper-plane"></i> Gửi Tin Nhắn</h3>
@@ -108,7 +104,6 @@ const submit = async () => {
                   :disabled="status==='loading'"></textarea>
               </div>
 
-              <!-- Submit -->
               <button type="submit" class="btn btn-primary submit-btn"
                 :disabled="status === 'loading' || status === 'success'" id="contact-submit">
                 <template v-if="status === 'idle'">
@@ -132,7 +127,6 @@ const submit = async () => {
 <style scoped>
 .contact-section { overflow: hidden; position: relative; }
 
-/* ── Layout ── */
 .contact-layout {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
@@ -140,7 +134,6 @@ const submit = async () => {
   align-items: start;
 }
 
-/* ── Info Card ── */
 .info-card {
   height: 100%;
   display: flex;
@@ -222,7 +215,6 @@ a.info-value:hover { color: var(--accent); }
   animation: dot-pulse 2s infinite;
 }
 
-/* ── Social Row ── */
 .social-row {
   display: flex;
   gap: 0.75rem;
@@ -252,7 +244,6 @@ a.info-value:hover { color: var(--accent); }
   transform: translateY(-3px);
 }
 
-/* ── Form ── */
 .form-card { height: 100%; }
 
 .form-title {
@@ -304,7 +295,6 @@ input:disabled, textarea:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .submit-btn:disabled { opacity: 0.75; cursor: not-allowed; }
 
-/* ── Spinner ── */
 .spinner {
   display: inline-block;
   width: 16px;
@@ -315,15 +305,12 @@ input:disabled, textarea:disabled { opacity: 0.6; cursor: not-allowed; }
   animation: spin-slow 0.7s linear infinite;
 }
 
-/* ── Responsive ── */
-/* Tablet ≤ 900px */
 @media (max-width: 900px) {
   .contact-layout { grid-template-columns: 1fr; gap: 1.5rem; }
   .field-group    { grid-template-columns: 1fr; }
   .info-card      { height: auto; }
 }
 
-/* Mobile ≤ 768px */
 @media (max-width: 768px) {
   .contact-layout { gap: 1.25rem; }
   .info-card      { gap: 1.5rem; }
@@ -334,7 +321,6 @@ input:disabled, textarea:disabled { opacity: 0.6; cursor: not-allowed; }
   .submit-btn     { padding: 0.875rem 1.75rem; font-size: 0.95rem; }
 }
 
-/* Small Mobile ≤ 480px */
 @media (max-width: 480px) {
   .info-sub   { font-size: 0.88rem; }
   .info-icon  { width: 40px; height: 40px; font-size: 1rem; }
@@ -346,7 +332,6 @@ input:disabled, textarea:disabled { opacity: 0.6; cursor: not-allowed; }
   textarea    { min-height: 100px; }
 }
 
-/* Very Small ≤ 360px */
 @media (max-width: 360px) {
   .social-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
   .social-big { width: 100%; justify-content: center; }

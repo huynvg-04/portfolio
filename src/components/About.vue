@@ -53,7 +53,6 @@ const animateSkills = () => {
     const tick = () => {
       const elapsed = Date.now() - start;
       const progress = Math.min(elapsed / duration, 1);
-      // easeOutCubic
       const eased = 1 - Math.pow(1 - progress, 3);
       skillsFilled.value[i] = Math.round(s.level * eased);
       if (progress < 1) requestAnimationFrame(tick);
@@ -80,7 +79,6 @@ onMounted(() => {
         kết hợp kỹ thuật vững chắc với tư duy giải quyết vấn đề sáng tạo.
       </p>
 
-      <!-- Cards -->
       <div class="about-grid">
         <div class="glass-card about-card flip-in-bottom" v-for="(card, i) in cards" :key="i"
              :data-flip-delay="i * 150"
@@ -93,9 +91,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- Skills + Tech -->
       <div class="skills-tech-grid">
-        <!-- Skills Bars -->
         <div class="glass-card skills-card flip-in-left">
           <h3 class="sub-heading">
             <i class="fa-solid fa-chart-bar"></i> Kỹ Năng Chuyên Môn
@@ -115,7 +111,6 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Tech Stack -->
         <div class="glass-card tech-card flip-in-right" data-flip-delay="150">
           <h3 class="sub-heading">
             <i class="fa-solid fa-layer-group"></i> Tech Stack
@@ -137,7 +132,6 @@ onMounted(() => {
 <style scoped>
 .about-section { background: transparent; }
 
-/* ── Cards ── */
 .about-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -178,7 +172,6 @@ onMounted(() => {
   font-size: 0.95rem;
 }
 
-/* ── Skills & Tech Grid ── */
 .skills-tech-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -198,7 +191,6 @@ onMounted(() => {
   color: var(--accent);
 }
 
-/* ── Skills Bars ── */
 .skills-list { display: flex; flex-direction: column; gap: 1.2rem; }
 
 .skill-meta {
@@ -236,7 +228,6 @@ onMounted(() => {
   opacity: 0.6;
 }
 
-/* ── Tech Grid ── */
 .tech-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -273,14 +264,11 @@ onMounted(() => {
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* ── Responsive ── */
-/* Tablet ≤ 900px */
 @media (max-width: 900px) {
   .skills-tech-grid { grid-template-columns: 1fr; }
   .tech-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
-/* Mobile ≤ 768px */
 @media (max-width: 768px) {
   .about-grid { grid-template-columns: 1fr; gap: 1.25rem; }
   .tech-grid  { grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
@@ -288,7 +276,6 @@ onMounted(() => {
   .sub-heading { font-size: 1rem; margin-bottom: 1.5rem; }
 }
 
-/* Small Mobile ≤ 480px */
 @media (max-width: 480px) {
   .about-grid { gap: 1rem; }
   .tech-grid  { grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
@@ -301,7 +288,6 @@ onMounted(() => {
   .skill-pct  { font-size: 0.8rem; }
 }
 
-/* Very Small ≤ 360px */
 @media (max-width: 360px) {
   .tech-grid { grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
   .tech-icon { width: 36px; height: 36px; font-size: 1rem; border-radius: 8px; }

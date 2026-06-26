@@ -9,7 +9,7 @@
   --text-muted: #8892b0;
   --text-dim: #4a5568;
 
-  /* ── Accent Palette ── */
+  
   --accent: #c2a4ff;
   --accent-dim: rgba(194, 164, 255, 0.15);
   --neon-purple: #6366f1;
@@ -22,17 +22,17 @@
   --aurora-gradient: linear-gradient(135deg, #e0caff, #c2a4ff, #a07cf0, #885ce3);
   --shine-gradient: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.06) 50%, transparent 60%);
 
-  /* ── Misc ── */
+  
   --input-bg: rgba(255, 255, 255, 0.05);
   --shadow-color: rgba(0, 0, 0, 0.6);
   --shadow-glow: rgba(194, 164, 255, 0.25);
   --shadow-purple: rgba(160, 124, 240, 0.25);
 
-  /* ── Typography ── */
+  
   --font-main: 'Outfit', sans-serif;
   --font-code: 'Fira Code', monospace;
 
-  /* ── Tokens ── */
+  
   --radius: 16px;
   --radius-sm: 10px;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -41,9 +41,7 @@
 
 
 
-/* ============================================================
-   RESET & BASE
-   ============================================================ */
+
 *,
 *::before,
 *::after {
@@ -72,15 +70,13 @@ body {
   padding-right: env(safe-area-inset-right);
 }
 
-/* ── Selection ── */
+
 ::selection {
   background: var(--accent);
   color: #fff;
 }
 
-/* ============================================================
-   BACKGROUND EFFECTS
-   ============================================================ */
+
 .bg-glow {
   position: fixed;
   border-radius: 50%;
@@ -109,9 +105,7 @@ body {
 
 
 
-/* ============================================================
-   TYPOGRAPHY
-   ============================================================ */
+
 h1,
 h2,
 h3,
@@ -143,9 +137,7 @@ h4 {
   line-height: 1.7;
 }
 
-/* ============================================================
-   LAYOUT
-   ============================================================ */
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -158,9 +150,7 @@ section {
   position: relative;
 }
 
-/* ============================================================
-   BUTTONS
-   ============================================================ */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -217,9 +207,7 @@ section {
   color: var(--accent);
 }
 
-/* ============================================================
-   GLASS CARDS
-   ============================================================ */
+
 .glass-card {
   background: var(--card-gradient);
   backdrop-filter: blur(16px);
@@ -252,9 +240,7 @@ section {
   box-shadow: 0 20px 60px var(--shadow-color), 0 0 0 1px var(--border-glass-hover);
 }
 
-/* ============================================================
-   FORM ELEMENTS
-   ============================================================ */
+
 input,
 textarea {
   width: 100%;
@@ -276,9 +262,7 @@ textarea:focus {
   box-shadow: 0 0 0 3px var(--accent-dim);
 }
 
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
+
 @keyframes float {
 
   0%,
@@ -432,11 +416,9 @@ textarea:focus {
   transform-origin: 70% 70%;
 }
 
-/* ============================================================
-   SCROLL-TRIGGERED ANIMATIONS
-   ============================================================ */
 
-/* ── Base hidden state ── */
+
+
 .fade-up,
 .fade-left,
 .fade-right,
@@ -450,7 +432,7 @@ textarea:focus {
   will-change: opacity, transform;
 }
 
-/* ── Initial transforms ── */
+
 .fade-up {
   transform: translateY(40px);
 }
@@ -472,7 +454,7 @@ textarea:focus {
   filter: blur(8px);
 }
 
-/* ── Visible state ── */
+
 .fade-up.visible,
 .fade-left.visible,
 .fade-right.visible,
@@ -483,7 +465,7 @@ textarea:focus {
   filter: none;
 }
 
-/* ── Stagger delays via data-delay ── */
+
 [data-delay="0"] {
   transition-delay: 0s !important;
 }
@@ -528,7 +510,7 @@ textarea:focus {
   transition-delay: 0.7s !important;
 }
 
-/* Respect reduced-motion preference */
+
 @media (prefers-reduced-motion: reduce) {
   .fade-up,
   .fade-left,
@@ -547,11 +529,9 @@ textarea:focus {
   }
 }
 
-/* ============================================================
-   3D SECTION FLIP TRANSITIONS
-   ============================================================ */
 
-/* ── Keyframes ── */
+
+
 @keyframes cube-flip-bottom {
   0% {
     opacity: 0;
@@ -616,7 +596,7 @@ textarea:focus {
   }
 }
 
-/* ── Base state (hidden before animation) ── */
+
 .flip-in-bottom,
 .flip-in-top,
 .flip-in-right,
@@ -625,7 +605,7 @@ textarea:focus {
   will-change: transform, opacity;
 }
 
-/* ── Triggered state ── */
+
 .flip-in-bottom.flip-active {
   animation: cube-flip-bottom 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
@@ -642,7 +622,7 @@ textarea:focus {
   animation: cube-flip-left 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-/* ── Animation delay support ── */
+
 .flip-in-bottom[data-flip-delay="200"].flip-active,
 .flip-in-top[data-flip-delay="200"].flip-active,
 .flip-in-right[data-flip-delay="200"].flip-active,
@@ -663,11 +643,9 @@ textarea:focus {
 .flip-in-right[data-flip-delay="150"].flip-active,
 .flip-in-left[data-flip-delay="150"].flip-active { animation-delay: 0.15s; }
 
-/* ============================================================
-   RESPONSIVE — Global
-   ============================================================ */
 
-/* ── Tablet (≤ 1024px) ── */
+
+
 @media (max-width: 1024px) {
   .container {
     padding: 0 1.75rem;
@@ -682,7 +660,7 @@ textarea:focus {
   }
 }
 
-/* ── Mobile (≤ 768px) ── */
+
 @media (max-width: 768px) {
   .section-title {
     font-size: clamp(1.8rem, 6vw, 2.4rem);
@@ -711,7 +689,7 @@ textarea:focus {
   }
 }
 
-/* ── Small Mobile (≤ 480px) ── */
+
 @media (max-width: 480px) {
   .section-title {
     font-size: clamp(1.6rem, 7vw, 2rem);
@@ -740,7 +718,7 @@ textarea:focus {
   }
 }
 
-/* ── Very Small (≤ 360px) ── */
+
 @media (max-width: 360px) {
   .container {
     padding: 0 0.875rem;

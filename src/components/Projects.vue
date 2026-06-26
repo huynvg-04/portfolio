@@ -23,7 +23,6 @@ const filtered = computed(() =>
     : projects.filter(p => p.category === activeFilter.value)
 );
 
-// 3D tilt
 const handleMouseMove = (e, card) => {
   const rect   = card.getBoundingClientRect();
   const x      = e.clientX - rect.left;
@@ -46,7 +45,6 @@ const handleMouseLeave = (card) => {
       <h2 class="section-title flip-in-right">Dự Án <span class="text-gradient">Nổi Bật</span></h2>
       <p class="section-subtitle flip-in-right" data-flip-delay="150">Một số sản phẩm tôi đã xây dựng — từ giao diện đến kiến trúc hệ thống.</p>
 
-      <!-- Filter Tabs -->
       <div class="filter-tabs flip-in-right" data-flip-delay="200">
         <button
           v-for="f in filters" :key="f"
@@ -56,7 +54,6 @@ const handleMouseLeave = (card) => {
         </button>
       </div>
 
-      <!-- Grid -->
       <div class="projects-grid">
         <div
           class="glass-card project-card flip-in-bottom"
@@ -67,7 +64,6 @@ const handleMouseLeave = (card) => {
           @mousemove="handleMouseMove($event, $event.currentTarget)"
           @mouseleave="handleMouseLeave($event.currentTarget)"
         >
-          <!-- Top gradient line -->
           <div class="project-top-line"></div>
 
           <div class="project-header">
@@ -101,7 +97,6 @@ const handleMouseLeave = (card) => {
 <style scoped>
 .projects-section { overflow: hidden; }
 
-/* ── Filter Tabs ── */
 .filter-tabs {
   display: flex;
   justify-content: center;
@@ -135,14 +130,12 @@ const handleMouseLeave = (card) => {
   box-shadow: 0 4px 16px var(--shadow-glow);
 }
 
-/* ── Grid ── */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
   gap: 1.75rem;
 }
 
-/* ── Card ── */
 .project-card {
   display: flex;
   flex-direction: column;
@@ -155,7 +148,7 @@ const handleMouseLeave = (card) => {
 .project-card:hover {
   border-color: var(--p-color) !important;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 30px -10px var(--p-color) !important;
-  transform: none !important; /* Overridden by JS tilt */
+  transform: none !important;
 }
 
 .project-top-line {
@@ -164,7 +157,6 @@ const handleMouseLeave = (card) => {
   width: 100%;
 }
 
-/* ── Inner Content ── */
 .project-header {
   display: flex;
   align-items: center;
@@ -208,7 +200,6 @@ const handleMouseLeave = (card) => {
   flex-grow: 1;
 }
 
-/* ── Tech Tags ── */
 .project-tech {
   display: flex;
   flex-wrap: wrap;
@@ -226,7 +217,6 @@ const handleMouseLeave = (card) => {
   font-family: var(--font-code);
 }
 
-/* ── Links ── */
 .project-links {
   display: flex;
   gap: 1rem;
@@ -259,13 +249,10 @@ const handleMouseLeave = (card) => {
   filter: brightness(1.2);
 }
 
-/* ── Responsive ── */
-/* Tablet ≤ 900px */
 @media (max-width: 900px) {
   .projects-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 }
 
-/* Mobile ≤ 768px */
 @media (max-width: 768px) {
   .projects-grid { grid-template-columns: 1fr; gap: 1.25rem; }
   .project-header { padding: 1.25rem 1.5rem 0; }
@@ -278,7 +265,6 @@ const handleMouseLeave = (card) => {
   .project-icon-wrap { width: 46px; height: 46px; font-size: 1.25rem; }
 }
 
-/* Small Mobile ≤ 480px */
 @media (max-width: 480px) {
   .projects-grid { gap: 1rem; }
   .project-header { padding: 1rem 1.25rem 0; }
@@ -291,7 +277,6 @@ const handleMouseLeave = (card) => {
   .filter-tabs    { gap: 0.4rem; margin-bottom: 1.75rem; }
 }
 
-/* Very Small ≤ 360px */
 @media (max-width: 360px) {
   .filter-tabs { gap: 0.35rem; }
   .filter-btn  { padding: 0.4rem 0.8rem; font-size: 0.8rem; }

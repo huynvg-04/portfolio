@@ -39,8 +39,7 @@ const handleMouseMove = (e) => {
 };
 
 onMounted(() => {
-  // ── Fade animations ──
-  const ANIM_CLASSES = '.fade-up, .fade-left, .fade-right, .fade-scale, .fade-blur';
+    const ANIM_CLASSES = '.fade-up, .fade-left, .fade-right, .fade-scale, .fade-blur';
   const fadeObs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('visible'); fadeObs.unobserve(e.target); }
@@ -48,8 +47,7 @@ onMounted(() => {
   }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
   document.querySelectorAll(`${ANIM_CLASSES}:not(.visible)`).forEach(el => fadeObs.observe(el));
 
-  // ── 3D Flip animations ──
-  const FLIP_CLASSES = '.flip-in-bottom, .flip-in-top, .flip-in-right, .flip-in-left';
+    const FLIP_CLASSES = '.flip-in-bottom, .flip-in-top, .flip-in-right, .flip-in-left';
   const flipObs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('flip-active'); flipObs.unobserve(e.target); }
@@ -57,8 +55,7 @@ onMounted(() => {
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll(FLIP_CLASSES).forEach(el => flipObs.observe(el));
 
-  // ── Split Text Reveal ──
-  splitAndAnimate('.split-text');
+    splitAndAnimate('.split-text');
   const splitObs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('split-visible'); splitObs.unobserve(e.target); }
@@ -66,8 +63,7 @@ onMounted(() => {
   }, { threshold: 0.25 });
   document.querySelectorAll('.split-text').forEach(el => splitObs.observe(el));
 
-  // ── Parallax ──
-  window.addEventListener('scroll', () => {
+    window.addEventListener('scroll', () => {
     if (scrollTicking) return;
     scrollTicking = true;
     requestAnimationFrame(() => {
@@ -91,7 +87,6 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
 <template>
   <div class="app-wrapper">
-    <!-- Inverted Color Cursor Glow -->
     <div class="cursor-glow" :style="{ transform: `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)` }"></div>
 
     <div class="bg-glow bg-glow-1"></div>
@@ -101,7 +96,6 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
     <main>
       <Hero />
 
-      <!-- Marquee 1: Roles -->
       <div class="marquee-section" aria-hidden="true">
         <div class="marquee-track">
           <div class="marquee-content">
@@ -125,7 +119,6 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
       <About />
 
-      <!-- Marquee 2: Tech (reverse) -->
       <div class="marquee-section marquee-reverse" aria-hidden="true">
         <div class="marquee-track">
           <div class="marquee-content">
@@ -177,16 +170,14 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 <style>
 .app-wrapper { min-height: 100vh; position: relative; }
 
-/* ── Cursor Glow ── */
 .cursor-glow {
   position: fixed;
   top: 0; left: 0;
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgb(214, 173, 255);
+  background: rgb(226, 198, 255);
   box-shadow: 0 0 20px 2px rgb(214, 173, 255);
-  filter: blur(4px);
   pointer-events: none;
   mix-blend-mode: difference;
   z-index: 9999;
@@ -194,7 +185,6 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   transition: transform 0.15s ease-out;
 }
 
-/* ── Split Text Animation ── */
 .split-char {
   display: inline-block;
   transform: translateY(100%);
@@ -209,7 +199,6 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   opacity: 1;
 }
 
-/* ── Marquee ── */
 .marquee-section {
   width: 100%;
   overflow: hidden;
