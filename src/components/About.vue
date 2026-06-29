@@ -1,296 +1,377 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 
-const skills = [
-  { name: 'PHP / Laravel',    level: 85, color: '#777bb4' },
-  { name: 'Vue.js / Nuxt',    level: 88, color: '#42b883' },
-  { name: 'JavaScript / TS',  level: 85, color: '#38bdf8' },
-  { name: 'Node.js / Express',level: 75, color: '#a78bfa' },
-  { name: 'CSS / Tailwind',   level: 88, color: '#f472b6' },
+const techStack = [
+  { icon: 'fa-brands fa-vuejs', color: '#42b883', name: 'Vue.js' },
+  { icon: 'fa-brands fa-js', color: '#f7df1e', name: 'JavaScript' },
+  { icon: 'fa-brands fa-laravel', color: '#ff2d20', name: 'Laravel' },
+  { icon: 'fa-brands fa-php', color: '#777bb4', name: 'PHP' },
+  { icon: 'fa-brands fa-node-js', color: '#68a063', name: 'Node.js' },
+  { icon: 'fa-brands fa-figma', color: '#a259ff', name: 'Figma' },
+  { icon: 'fa-solid fa-database', color: '#fb923c', name: 'SQL' },
+  { icon: 'fa-brands fa-git-alt', color: '#f05032', name: 'Git' },
 ];
-
-const tech = [
-  { icon: 'fa-brands fa-php',      label: 'PHP',      color: '#777bb4' },
-  { icon: 'fa-brands fa-laravel',  label: 'Laravel',  color: '#ff2d20' },
-  { icon: 'fa-brands fa-vuejs',    label: 'Vue',      color: '#42b883' },
-  { icon: 'fa-brands fa-js',       label: 'JS/TS',    color: '#f7df1e' },
-  { icon: 'fa-brands fa-node-js',  label: 'Node',     color: '#68a063' },
-  { icon: 'fa-brands fa-git-alt',  label: 'Git',      color: '#f05032' },
-  { icon: 'fa-solid fa-database',  label: 'SQL',      color: '#fb923c' },
-  { icon: 'fa-brands fa-figma',    label: 'Figma',    color: '#a259ff' },
-];
-
-const cards = [
-  {
-    icon:  'fa-solid fa-wand-magic-sparkles',
-    color: '--neon-pink',
-    title: 'Đam Mê Thiết Kế',
-    text:  'Tôi tin rằng một thiết kế tuyệt vời không chỉ nằm ở vẻ bề ngoài mà còn ở cảm giác mang lại. Mỗi pixel đều được chăm chút để tạo nên trải nghiệm người dùng hoàn hảo.',
-  },
-  {
-    icon:  'fa-brands fa-vuejs',
-    color: '#42b883',
-    title: 'Chuyên Gia Vue',
-    text:  'Thành thạo Vue 3, Composition API, Pinia và Vite. Tôi chuyên xây dựng SPA có khả năng mở rộng, dễ bảo trì và tối ưu hiệu suất cao nhất.',
-  },
-  {
-    icon:  'fa-solid fa-bolt',
-    color: '--neon-orange',
-    title: 'Tối Ưu Tốc Độ',
-    text:  'Tốc độ là một tính năng thiết yếu. Tôi đảm bảo ứng dụng tải cực nhanh và hoạt động trơn tru trên mọi thiết bị và điều kiện mạng.',
-  },
-];
-
-const skillsFilled = ref(skills.map(() => 0));
-const animated     = ref(false);
-
-const animateSkills = () => {
-  if (animated.value) return;
-  animated.value = true;
-  skills.forEach((s, i) => {
-    const start = Date.now();
-    const duration = 900 + i * 80;
-    const tick = () => {
-      const elapsed = Date.now() - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      skillsFilled.value[i] = Math.round(s.level * eased);
-      if (progress < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  });
-};
 
 onMounted(() => {
-  const obs = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) { animateSkills(); obs.disconnect(); }
-  }, { threshold: 0.3 });
-  const el = document.getElementById('about');
-  if (el) obs.observe(el);
+  // Intersection Observer for fade-up animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.bento-item').forEach(el => observer.observe(el));
 });
 </script>
 
 <template>
   <section id="about" class="about-section">
     <div class="container">
-      <h2 class="section-title flip-in-bottom">Về <span class="text-gradient">Tôi</span></h2>
-      <p class="section-subtitle flip-in-bottom" data-flip-delay="150">
-        Một lập trình viên mới tốt nghiệp đam mê kiến tạo những sản phẩm số chất lượng,
-        kết hợp kỹ thuật vững chắc với tư duy giải quyết vấn đề sáng tạo.
+      <h2 class="section-title">Về <span class="text-gradient">Tôi</span></h2>
+      <p class="section-subtitle">
+        Khám phá hành trình, kỹ năng và những điều làm nên phong cách làm việc của tôi.
       </p>
 
-      <div class="about-grid">
-        <div class="glass-card about-card flip-in-bottom" v-for="(card, i) in cards" :key="i"
-             :data-flip-delay="i * 150"
-             :style="{ '--card-accent': card.color.startsWith('--') ? `var(${card.color})` : card.color }">
-          <div class="card-icon-wrap">
-            <i :class="card.icon" :style="{ color: card.color.startsWith('--') ? `var(${card.color})` : card.color }"></i>
+      <div class="bento-grid">
+        
+        <!-- ── Card 1: Bio ── -->
+        <div class="bento-item glass-card card-bio">
+          <div class="bio-content">
+            <div class="bio-header">
+              <div class="avatar-wrap">
+                <!-- Avatar placeholder -->
+                <i class="fa-solid fa-user-astronaut"></i>
+              </div>
+              <div class="bio-title">
+                <h3>Chào, mình là <span class="text-gradient">Huy</span> 👋</h3>
+                <p class="role">Lập trình viên Fullstack</p>
+              </div>
+            </div>
+            <p class="bio-text">
+              Mình là một lập trình viên đam mê xây dựng các sản phẩm web thực tế và đẹp mắt. 
+              Mình không chỉ viết code để hệ thống chạy được, mà còn tập trung vào 
+              <strong>trải nghiệm người dùng (UX)</strong> và <strong>hiệu suất</strong>. 
+              <br><br>
+              Mình luôn tò mò học hỏi công nghệ mới và mong muốn mang lại giá trị thực qua từng dòng code.
+            </p>
           </div>
-          <h3>{{ card.title }}</h3>
-          <p>{{ card.text }}</p>
         </div>
-      </div>
 
-      <div class="skills-tech-grid">
-        <div class="glass-card skills-card flip-in-left">
-          <h3 class="sub-heading">
-            <i class="fa-solid fa-chart-bar"></i> Kỹ Năng Chuyên Môn
-          </h3>
-          <div class="skills-list">
-            <div class="skill-item" v-for="(s, i) in skills" :key="i">
-              <div class="skill-meta">
-                <span class="skill-name">{{ s.name }}</span>
-                <span class="skill-pct">{{ skillsFilled[i] }}%</span>
-              </div>
-              <div class="skill-bar-track">
-                <div class="skill-bar-fill"
-                     :style="{ width: skillsFilled[i] + '%', background: s.color + ' linear-gradient(90deg, ' + s.color + '99, ' + s.color + ')' }">
-                </div>
-              </div>
+        <!-- ── Card 2: Location ── -->
+        <div class="bento-item glass-card card-location">
+          <div class="bento-inner">
+            <div class="icon-circle">
+              <i class="fa-solid fa-earth-asia"></i>
+            </div>
+            <div class="loc-text">
+              <h4>Vị trí</h4>
+              <p>Việt Nam</p>
+              <span class="status-badge"><span class="dot"></span> Đang tìm kiếm cơ hội</span>
             </div>
           </div>
         </div>
 
-        <div class="glass-card tech-card flip-in-right" data-flip-delay="150">
-          <h3 class="sub-heading">
-            <i class="fa-solid fa-layer-group"></i> Tech Stack
-          </h3>
-          <div class="tech-grid">
-            <div class="tech-item" v-for="t in tech" :key="t.label">
-              <div class="tech-icon" :style="{ '--t-color': t.color }">
-                <i :class="t.icon" :style="{ color: t.color }"></i>
-              </div>
-              <span>{{ t.label }}</span>
+        <!-- ── Card 3: Tech Stack ── -->
+        <div class="bento-item glass-card card-tech">
+          <h4><i class="fa-solid fa-layer-group"></i> Tech Stack</h4>
+          <div class="tech-cloud">
+            <div v-for="tech in techStack" :key="tech.name" class="tech-pill" :style="{ '--tc': tech.color }">
+              <i :class="tech.icon"></i>
+              <span>{{ tech.name }}</span>
             </div>
           </div>
         </div>
+
+        <!-- ── Card 4: Fun Fact ── -->
+        <div class="bento-item glass-card card-funfact">
+          <div class="bento-inner">
+            <div class="icon-circle highlight">
+              <i class="fa-solid fa-gamepad"></i>
+            </div>
+            <div class="fact-text">
+              <h4>Sở thích</h4>
+              <p>Ngoài giờ code, mình thường chơi game, nghe nhạc indie và tìm hiểu về UI/UX Design.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Card 5: Learning ── -->
+        <div class="bento-item glass-card card-learning">
+          <h4><i class="fa-solid fa-book-open-reader"></i> Đang tìm hiểu</h4>
+          <div class="learning-list">
+            <div class="learn-item">
+              <i class="fa-brands fa-react"></i> React / Next.js
+            </div>
+            <div class="learn-item">
+              <i class="fa-solid fa-server"></i> Kiến trúc Microservices
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-.about-section { background: transparent; }
+.about-section {
+  padding: 6rem 0;
+  background: transparent;
+}
 
-.about-grid {
+.bento-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(180px, auto);
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.bento-item {
+  border-radius: 24px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.bento-item.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bento-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.bento-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+}
+
+/* ── Specific Cards ── */
+.card-bio {
+  grid-column: span 2;
+  grid-row: span 2;
+  background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01));
+}
+
+.card-location {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.card-tech {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.card-funfact {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.card-learning {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+/* ── Bio Content ── */
+.bio-header {
+  display: flex;
+  align-items: center;
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
-.about-card {
-  border-top: 3px solid var(--card-accent, var(--accent));
-  transition: var(--transition);
-}
-
-.about-card:hover {
-  box-shadow: 0 0 30px -8px var(--card-accent, var(--shadow-glow));
-}
-
-.card-icon-wrap {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
+.avatar-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--bg-glass-hover);
+  border: 2px solid var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  margin-bottom: 1.25rem;
-}
-
-.about-card h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-}
-
-.about-card p {
-  color: var(--text-muted);
-  line-height: 1.7;
-  font-size: 0.95rem;
-}
-
-.skills-tech-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
-.sub-heading {
-  font-size: 1.1rem;
-  margin-bottom: 1.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: var(--text-main);
-}
-
-.sub-heading i {
+  font-size: 2.5rem;
   color: var(--accent);
 }
 
-.skills-list { display: flex; flex-direction: column; gap: 1.2rem; }
-
-.skill-meta {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
+.bio-title h3 {
+  font-size: 1.75rem;
+  margin-bottom: 0.25rem;
 }
 
-.skill-name { font-weight: 500; font-size: 0.9rem; }
-.skill-pct  { font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-code); }
+.role {
+  color: var(--text-muted);
+  font-family: var(--font-code);
+  font-size: 0.95rem;
+}
 
-.skill-bar-track {
-  height: 6px;
+.bio-text {
+  color: var(--text-muted);
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.bio-text strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+/* ── Common Utilities ── */
+.icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   background: var(--bg-glass-hover);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.skill-bar-fill {
-  height: 100%;
-  border-radius: 6px;
-  transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.skill-bar-fill::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 6px;
-  height: 100%;
-  border-radius: 50%;
-  background: #fff;
-  opacity: 0.6;
-}
-
-.tech-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-}
-
-.tech-item {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+}
+
+.icon-circle.highlight {
+  color: #f472b6;
+}
+
+h4 {
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.75rem;
+}
+h4 i { color: var(--accent); }
+
+/* ── Location ── */
+.loc-text p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #4ade80;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #4ade80;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+/* ── Tech Cloud ── */
+.tech-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.tech-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-main);
+  transition: var(--transition);
+  cursor: default;
+}
+
+.tech-pill i {
+  color: var(--tc);
+  font-size: 1.1rem;
+}
+
+.tech-pill:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--tc);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* ── Fun Fact ── */
+.fact-text p {
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* ── Learning ── */
+.learning-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.learn-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bg-glass);
+  border-radius: 12px;
   color: var(--text-muted);
   font-weight: 500;
 }
 
-.tech-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  transition: var(--transition);
+.learn-item i {
+  color: var(--accent);
+  font-size: 1.2rem;
 }
 
-.tech-item:hover .tech-icon {
-  background: var(--accent-dim);
-  border-color: var(--t-color, var(--accent));
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .card-location { grid-column: span 1; }
+  .card-funfact { grid-column: span 1; }
 }
 
-@media (max-width: 900px) {
-  .skills-tech-grid { grid-template-columns: 1fr; }
-  .tech-grid { grid-template-columns: repeat(4, 1fr); }
-}
-
-@media (max-width: 768px) {
-  .about-grid { grid-template-columns: 1fr; gap: 1.25rem; }
-  .tech-grid  { grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
-  .tech-icon  { width: 44px; height: 44px; font-size: 1.25rem; }
-  .sub-heading { font-size: 1rem; margin-bottom: 1.5rem; }
-}
-
-@media (max-width: 480px) {
-  .about-grid { gap: 1rem; }
-  .tech-grid  { grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
-  .tech-icon  { width: 40px; height: 40px; font-size: 1.1rem; border-radius: 10px; }
-  .tech-item  { font-size: 0.7rem; gap: 0.35rem; }
-  .card-icon-wrap { width: 46px; height: 46px; font-size: 1.25rem; }
-  .about-card h3  { font-size: 1.1rem; }
-  .about-card p   { font-size: 0.88rem; }
-  .skill-name { font-size: 0.85rem; }
-  .skill-pct  { font-size: 0.8rem; }
-}
-
-@media (max-width: 360px) {
-  .tech-grid { grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
-  .tech-icon { width: 36px; height: 36px; font-size: 1rem; border-radius: 8px; }
-  .tech-item { font-size: 0.65rem; }
+@media (max-width: 640px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+  .card-bio, .card-tech, .card-learning, .card-location, .card-funfact {
+    grid-column: span 1;
+    grid-row: auto;
+  }
+  .bento-item { padding: 1.5rem; }
+  .bio-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
 }
 </style>

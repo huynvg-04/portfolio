@@ -68,13 +68,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 
-::selection {
-  background: var(--accent);
-  color: #fff;
-}
+
 
 
 .bg-glow {
@@ -228,6 +227,7 @@ section {
   background-size: 300% 100%;
   opacity: 0;
   transition: opacity 0.4s ease;
+  pointer-events: none;
 }
 
 .glass-card:hover::before {

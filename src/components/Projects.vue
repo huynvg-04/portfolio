@@ -1,121 +1,259 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
 
-const filters = ['Tất Cả', 'Frontend', 'Fullstack', 'Backend'];
 const activeFilter = ref('Tất Cả');
 
-const projects = [
+const allProjects = [
   {
-    title: 'Nền Tảng Thương Mại Điện Tử',
-    desc:  'Hệ thống thương mại điện tử quy mô lớn với thanh toán Stripe, giỏ hàng real-time, và bảng quản trị admin toàn diện. UX mượt mà, tốc độ cực nhanh.',
-    tech:  ['PHP', 'Laravel', 'MySQL'],
-    icon:  'fa-solid fa-cart-shopping',
-    color: '#38bdf8',
+    num: '01',
+    title: 'E-Commerce Platform',
+    subtitle: 'Thanh toán VNPAY & MoMo — Giỏ hàng real-time — Admin Dashboard',
     category: 'Fullstack',
+    tech: ['Laravel', 'MySQL', 'HTML', 'CSS', 'JavaScript'],
+    color: '#38bdf8',
     github: 'https://github.com/huynvg-04/greenvibes',
-    demo:   '#',
-  }
+    image: '/greenvibes.png',
+  },
+  {
+    num: '02',
+    title: 'Movie Website',
+    subtitle: 'Xem phim trực tuyến — Tìm kiếm & phân loại thể loại',
+    category: 'Fullstack',
+    tech: ['Laravel', 'MySQL', 'HTML', 'CSS'],
+    color: '#a855f7',
+    github: 'https://github.com/huynvg-04/moviewebsite',
+    image: '/moviewebsite.png',
+  },
 ];
 
-const filtered = computed(() =>
-  activeFilter.value === 'Tất Cả'
-    ? projects
-    : projects.filter(p => p.category === activeFilter.value)
+const skeletons = [
+  { num: '03', color: '#6366f1' },
+  { num: '04', color: '#f59e0b' },
+];
+
+const filters = computed(() => [
+  'Tất Cả',
+  ...new Set(allProjects.map(p => p.category)),
+]);
+
+const visibleItems = computed(() => {
+  const real =
+    activeFilter.value === 'Tất Cả'
+      ? allProjects
+      : allProjects.filter(p => p.category === activeFilter.value);
+  return [
+    ...real.map(p => ({ ...p, isSkeleton: false })),
+    ...skeletons.map(s => ({ ...s, isSkeleton: true })),
+  ];
+});
+
+/* ── Sticky horizontal scroll ── */
+const sectionRef = ref(null);
+const trackRef = ref(null);
+const scrollProgress = ref(0);
+
+const activeIndex = computed(() =>
+  Math.min(
+    Math.round(scrollProgress.value * (visibleItems.value.length - 1)),
+    visibleItems.value.length - 1,
+  ),
 );
 
-const handleMouseMove = (e, card) => {
-  const rect   = card.getBoundingClientRect();
-  const x      = e.clientX - rect.left;
-  const y      = e.clientY - rect.top;
-  const cx     = rect.width  / 2;
-  const cy     = rect.height / 2;
-  const rotateX =  ((y - cy) / cy) * -6;
-  const rotateY =  ((x - cx) / cx) *  6;
-  card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+const updateTranslate = () => {
+  const section = sectionRef.value;
+  const track = trackRef.value;
+  if (!section || !track) return;
+
+  const sectionTop = section.offsetTop;
+  const scrolled = window.scrollY - sectionTop;
+  const maxScroll = section.offsetHeight - window.innerHeight;
+  if (maxScroll <= 0) return;
+
+  const progress = Math.min(Math.max(scrolled / maxScroll, 0), 1);
+  scrollProgress.value = progress;
+
+  const totalTrack = track.scrollWidth - window.innerWidth;
+  track.style.transform = `translateX(${-progress * totalTrack}px)`;
 };
-const handleMouseLeave = (card) => {
-  card.style.transform = '';
-};
+
+onMounted(() => {
+  window.addEventListener('scroll', updateTranslate, { passive: true });
+  updateTranslate();
+});
+onUnmounted(() => window.removeEventListener('scroll', updateTranslate));
+watch(visibleItems, () => nextTick(updateTranslate));
 </script>
 
 <template>
-  <section id="projects" class="projects-section">
-    <div class="bg-glow-2 bg-glow" style="opacity:0.07;"></div>
-    <div class="container">
-      <h2 class="section-title flip-in-right">Dự Án <span class="text-gradient">Nổi Bật</span></h2>
-      <p class="section-subtitle flip-in-right" data-flip-delay="150">Một số sản phẩm tôi đã xây dựng — từ giao diện đến kiến trúc hệ thống.</p>
+  <section id="projects" class="projects-section" ref="sectionRef"
+    :style="{ height: visibleItems.length * 100 + 'vh' }">
+    <div class="projects-sticky">
 
-      <div class="filter-tabs flip-in-right" data-flip-delay="200">
-        <button
-          v-for="f in filters" :key="f"
-          :class="['filter-btn', { active: activeFilter === f }]"
-          @click="activeFilter = f">
-          {{ f }}
-        </button>
-      </div>
-
-      <div class="projects-grid">
-        <div
-          class="glass-card project-card flip-in-bottom"
-          v-for="(project, index) in filtered"
-          :key="project.title"
-          :data-flip-delay="index * 150"
-          :style="{ '--p-color': project.color }"
-          @mousemove="handleMouseMove($event, $event.currentTarget)"
-          @mouseleave="handleMouseLeave($event.currentTarget)"
-        >
-          <div class="project-top-line"></div>
-
-          <div class="project-header">
-            <div class="project-icon-wrap">
-              <i :class="project.icon" :style="{ color: project.color }"></i>
-            </div>
-            <span class="project-category">{{ project.category }}</span>
-          </div>
-
-          <h3 class="project-title">{{ project.title }}</h3>
-          <p class="project-desc">{{ project.desc }}</p>
-
-          <div class="project-tech">
-            <span v-for="t in project.tech" :key="t" class="tech-tag">{{ t }}</span>
-          </div>
-
-          <div class="project-links">
-            <a :href="project.github" target="_blank" rel="noopener" class="proj-link" id="proj-github">
-              <i class="fa-brands fa-github"></i> GitHub
-            </a>
-            <a :href="project.demo" class="proj-link proj-demo" id="proj-demo">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
-            </a>
-          </div>
+      <!-- ── Header ─────────────────────────────── -->
+      <div class="proj-header">
+        <h2 class="proj-heading">My <span class="text-gradient">Work</span></h2>
+        <div class="filter-tabs">
+          <button v-for="f in filters" :key="f" :class="['filter-btn', { active: activeFilter === f }]"
+            @click="activeFilter = f">{{ f }}</button>
         </div>
       </div>
+
+      <!-- ── Horizontal track ────────────────────── -->
+      <div class="proj-track" ref="trackRef">
+        <article v-for="(item, index) in visibleItems" :key="item.num" class="proj-slide"
+          :style="{ '--c': item.color }">
+          <!-- Watermark number -->
+          <span class="wm-num" aria-hidden="true">{{ item.num }}</span>
+
+          <!-- Left — Info -->
+          <div class="slide-info">
+            <div class="slide-top">
+              <span class="slide-idx">{{ item.num }}</span>
+              <div class="slide-meta">
+                <template v-if="!item.isSkeleton">
+                  <h3 class="slide-name">{{ item.title }}</h3>
+                  <p class="slide-sub">{{ item.subtitle }}</p>
+                </template>
+                <template v-else>
+                  <div class="skel skel-h"></div>
+                  <div class="skel skel-p"></div>
+                </template>
+              </div>
+            </div>
+
+            <div class="slide-divider"></div>
+
+            <template v-if="!item.isSkeleton">
+              <div>
+                <p class="tech-label">Công nghệ sử dụng</p>
+                <p class="tech-text">{{ item.tech.join(', ') }}</p>
+              </div>
+              <div class="slide-actions">
+                <a :href="item.github" target="_blank" rel="noopener" class="slide-btn">
+                  GitHub ↗
+                </a>
+              </div>
+            </template>
+            <template v-else>
+              <div>
+                <div class="skel skel-label"></div>
+                <div class="skel skel-tech"></div>
+              </div>
+              <span class="coming-badge">Sắp Ra Mắt</span>
+            </template>
+          </div>
+
+          <!-- Right — Preview -->
+          <div class="slide-preview">
+            <template v-if="!item.isSkeleton">
+              <img v-if="item.image" :src="item.image" :alt="item.title" class="project-image" />
+              <div v-else class="mockup">
+                <div class="mockup-bar">
+                  <span class="mdot" v-for="i in 3" :key="i"></span>
+                  <div class="murl"></div>
+                </div>
+                <div class="mockup-body">
+                  <div class="m-sidebar">
+                    <div class="ms-item" v-for="i in 5" :key="i"></div>
+                  </div>
+                  <div class="m-main">
+                    <div class="m-line" style="width:70%"></div>
+                    <div class="m-line" style="width:45%"></div>
+                    <div class="m-cards">
+                      <div class="m-card" v-for="i in 4" :key="i"></div>
+                    </div>
+                    <div class="m-line" style="width:60%"></div>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <div class="skel-preview-inner">
+                <div class="skel skel-mbar"></div>
+                <div class="skel-mbody">
+                  <div class="skel skel-msidebar"></div>
+                  <div class="skel-mmain">
+                    <div class="skel skel-mline"></div>
+                    <div class="skel skel-mline short"></div>
+                    <div class="skel skel-mblock"></div>
+                    <div class="skel skel-mline" style="width:60%"></div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+
+        </article>
+      </div>
+
+      <!-- ── Footer — dots + hint ───────────────── -->
+      <div class="proj-footer">
+        <div class="proj-dots">
+          <span v-for="(item, i) in visibleItems" :key="i" class="proj-dot"
+            :class="{ active: activeIndex === i }"></span>
+        </div>
+        <transition name="fade-hint">
+          <span v-if="activeIndex < visibleItems.length - 1" class="scroll-hint" key="more">
+            Cuộn để xem tiếp →
+          </span>
+          <span v-else class="scroll-hint done" key="done">
+            Cuộn để tiếp tục ↓
+          </span>
+        </transition>
+      </div>
+
     </div>
   </section>
 </template>
 
 <style scoped>
-.projects-section { overflow: hidden; }
+/* ─── Section / Sticky wrapper ─────────────────────────────── */
+.projects-section {
+  position: relative;
+}
+
+.projects-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-dark);
+}
+
+.proj-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6rem 5vw 1.25rem;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.352);
+  flex-shrink: 0;
+}
+
+.proj-heading {
+  font-size: clamp(2.24rem, 4.9vw, 3.36rem);
+  font-weight: 500;
+  line-height: 1;
+}
 
 .filter-tabs {
   display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .filter-btn {
-  padding: 0.55rem 1.4rem;
+  padding: 0.45rem 1.1rem;
   border-radius: 50px;
   border: 1px solid var(--border-glass);
   background: var(--bg-glass);
   color: var(--text-muted);
   font-family: var(--font-main);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: var(--transition);
+  pointer-events: auto;
 }
 
 .filter-btn:hover {
@@ -130,156 +268,451 @@ const handleMouseLeave = (card) => {
   box-shadow: 0 4px 16px var(--shadow-glow);
 }
 
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-  gap: 1.75rem;
+/* ─── Horizontal track ─────────────────────────────────────── */
+.proj-track {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  will-change: transform;
 }
 
-.project-card {
+.proj-slide {
+  min-width: 100vw;
+  width: 100vw;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 2rem 6vw;
+  gap: 4vw;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border-right: 0.5px solid rgba(255, 255, 255, 0.352);
+}
+
+.proj-slide:last-child {
+  border-right: none;
+}
+
+/* Watermark giant number */
+.wm-num {
+  position: absolute;
+  bottom: -0.12em;
+  left: 4vw;
+  font-size: clamp(7rem, 22vw, 20rem);
+  font-weight: 900;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.035);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* ─── Slide Info (left) ─────────────────────────────────────── */
+.slide-info {
   display: flex;
   flex-direction: column;
-  padding: 0;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.3s ease !important;
-  cursor: default;
+  gap: 1.75rem;
+  position: relative;
+  z-index: 1;
 }
 
-.project-card:hover {
-  border-color: var(--p-color) !important;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 30px -10px var(--p-color) !important;
-  transform: none !important;
-}
-
-.project-top-line {
-  height: 3px;
-  background: linear-gradient(90deg, var(--p-color, var(--accent)), transparent);
-  width: 100%;
-}
-
-.project-header {
+.slide-top {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem 1.75rem 0;
+  align-items: flex-start;
+  gap: 1.5rem;
 }
 
-.project-icon-wrap {
-  width: 54px;
-  height: 54px;
-  border-radius: 14px;
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
+.slide-idx {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent);
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
 }
 
-.project-category {
-  font-size: 0.75rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: 50px;
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
-  color: var(--text-muted);
-  font-weight: 500;
+.slide-meta {
+  flex: 1;
+  padding-top: 0.35rem;
 }
 
-.project-title {
-  font-size: 1.25rem;
-  padding: 1.25rem 1.75rem 0.75rem;
-  line-height: 1.3;
-}
-
-.project-desc {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  line-height: 1.7;
-  padding: 0 1.75rem 1.25rem;
-  flex-grow: 1;
-}
-
-.project-tech {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0 1.75rem 1.25rem;
-}
-
-.tech-tag {
-  font-size: 0.72rem;
-  padding: 0.3rem 0.75rem;
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
-  border-radius: 20px;
-  color: var(--text-muted);
-  font-family: var(--font-code);
-}
-
-.project-links {
-  display: flex;
-  gap: 1rem;
-  padding: 1.25rem 1.75rem 1.5rem;
-  border-top: 1px solid var(--border-glass);
-  margin-top: auto;
-}
-
-.proj-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.87rem;
-  font-weight: 500;
-  transition: var(--transition-fast);
-}
-
-.proj-link:hover {
+.slide-name {
+  font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
   color: var(--text-main);
 }
 
-.proj-demo {
-  margin-left: auto;
-  color: var(--p-color, var(--accent));
+.slide-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
-.proj-demo:hover {
-  filter: brightness(1.2);
+.slide-divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent) 0%, transparent 80%);
+  opacity: 0.35;
 }
 
+.tech-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.tech-text {
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  color: var(--text-main);
+  line-height: 1.65;
+}
+
+.slide-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.slide-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.65rem 1.6rem;
+  border: 1px solid var(--border-glass-hover);
+  border-radius: 50px;
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: var(--font-main);
+  background: var(--bg-glass);
+  transition: var(--transition);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.slide-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--bg-glass-hover);
+}
+
+.coming-badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 0.5rem 1.25rem;
+  border: 1px dashed var(--border-glass-hover);
+  border-radius: 50px;
+  color: var(--text-muted);
+  font-size: 0.83rem;
+  animation: cpulse 2s ease-in-out infinite;
+}
+
+@keyframes cpulse {
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.slide-preview {
+  position: relative;
+  z-index: 1;
+  height: min(400px, 52vh);
+  overflow: hidden;
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 240, 240, 0.215);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.4s ease;
+}
+
+.project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+.mockup {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mockup-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgb(255, 255, 255);
+  flex-shrink: 0;
+}
+
+.mdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-glass-hover);
+}
+
+.murl {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  margin-left: 0.5rem;
+}
+
+.mockup-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.m-sidebar {
+  width: 22%;
+  padding: 0.75rem 0.5rem;
+  border-right: 1px solid var(--border-glass);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+.ms-item {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.ms-item:first-child {
+  background: var(--accent);
+  opacity: 0.4;
+}
+
+.m-main {
+  flex: 1;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.m-line {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.m-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.55rem;
+  flex: 1;
+  margin-top: 0.25rem;
+}
+
+.m-card {
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), transparent);
+  opacity: 0.12;
+  min-height: 40px;
+}
+
+/* ── Skeleton ── */
+.skel {
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.04) 25%,
+      rgba(255, 255, 255, 0.09) 50%,
+      rgba(255, 255, 255, 0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.skel-h {
+  height: 24px;
+  width: 80%;
+  margin-bottom: 0.5rem;
+}
+
+.skel-p {
+  height: 14px;
+  width: 60%;
+}
+
+.skel-label {
+  height: 11px;
+  width: 40%;
+  margin-bottom: 0.4rem;
+}
+
+.skel-tech {
+  height: 18px;
+  width: 80%;
+}
+
+/* Skeleton preview */
+.skel-preview-inner {
+  padding: 0.75rem 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  box-sizing: border-box;
+}
+
+.skel-mbar {
+  height: 24px;
+  width: 100%;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+.skel-mbody {
+  flex: 1;
+  display: flex;
+  gap: 0.65rem;
+  min-height: 0;
+}
+
+.skel-msidebar {
+  width: 22%;
+  border-radius: 6px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.skel-mmain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.skel-mline {
+  height: 10px;
+  width: 75%;
+  border-radius: 4px;
+}
+
+.skel-mline.short {
+  width: 45%;
+}
+
+.skel-mblock {
+  flex: 1;
+  border-radius: 8px;
+  min-height: 0;
+}
+
+/* ─── Footer ──────────────────────────────────────────────── */
+.proj-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 5vw;
+  border-top: 1px solid var(--border-glass);
+  flex-shrink: 0;
+}
+
+.proj-dots {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.proj-dot {
+  height: 5px;
+  width: 5px;
+  border-radius: 3px;
+  background: var(--border-glass-hover);
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.proj-dot.active {
+  width: 22px;
+  background: var(--accent);
+}
+
+.scroll-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+
+.scroll-hint.done {
+  color: var(--accent);
+}
+
+/* Fade transition for hint text */
+.fade-hint-enter-active,
+.fade-hint-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-hint-enter-from,
+.fade-hint-leave-to {
+  opacity: 0;
+}
+
+/* ─── Responsive ───────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .projects-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .proj-slide {
+    grid-template-columns: 1fr;
+    padding: 1.5rem 6vw 1rem;
+    overflow-y: auto;
+    align-items: start;
+  }
+
+  .slide-preview {
+    height: 220px;
+  }
+
+  .wm-num {
+    font-size: clamp(5rem, 28vw, 10rem);
+    bottom: -0.05em;
+  }
 }
 
-@media (max-width: 768px) {
-  .projects-grid { grid-template-columns: 1fr; gap: 1.25rem; }
-  .project-header { padding: 1.25rem 1.5rem 0; }
-  .project-title  { font-size: 1.15rem; padding: 1rem 1.5rem 0.65rem; }
-  .project-desc   { font-size: 0.875rem; padding: 0 1.5rem 1rem; }
-  .project-tech   { padding: 0 1.5rem 1rem; }
-  .project-links  { padding: 1rem 1.5rem 1.25rem; }
-  .filter-btn     { padding: 0.5rem 1.1rem; font-size: 0.85rem; }
-  .filter-tabs    { gap: 0.5rem; margin-bottom: 2rem; }
-  .project-icon-wrap { width: 46px; height: 46px; font-size: 1.25rem; }
-}
+@media (max-width: 600px) {
+  .proj-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 5rem 6vw 1rem;
+  }
 
-@media (max-width: 480px) {
-  .projects-grid { gap: 1rem; }
-  .project-header { padding: 1rem 1.25rem 0; }
-  .project-title  { font-size: 1.1rem; padding: 0.875rem 1.25rem 0.6rem; }
-  .project-desc   { font-size: 0.85rem; padding: 0 1.25rem 0.875rem; }
-  .project-tech   { padding: 0 1.25rem 0.875rem; gap: 0.4rem; }
-  .project-links  { padding: 0.875rem 1.25rem 1.125rem; }
-  .tech-tag       { font-size: 0.68rem; padding: 0.25rem 0.6rem; }
-  .filter-btn     { padding: 0.45rem 0.9rem; font-size: 0.82rem; }
-  .filter-tabs    { gap: 0.4rem; margin-bottom: 1.75rem; }
-}
+  .slide-idx {
+    font-size: 2rem;
+  }
 
-@media (max-width: 360px) {
-  .filter-tabs { gap: 0.35rem; }
-  .filter-btn  { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-  .project-title { font-size: 1.05rem; }
+  .slide-divider {
+    margin: 0;
+  }
 }
 </style>

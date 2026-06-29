@@ -32,6 +32,7 @@ let scrollTicking = false;
 
 const mouseX = ref(window.innerWidth / 2);
 const mouseY = ref(window.innerHeight / 2);
+const isHovering = ref(false);
 const isLoading = ref(true);
 const loadingProgress = ref(0);
 const showLoaderContent = ref(true);
@@ -40,6 +41,14 @@ const expandHole = ref(false);
 const handleMouseMove = (e) => {
   mouseX.value = e.clientX;
   mouseY.value = e.clientY;
+};
+
+const handleMouseOver = (e) => {
+  if (e.target.closest('a, button, [role="button"], .filter-btn, .slide-btn')) {
+    isHovering.value = true;
+  } else {
+    isHovering.value = false;
+  }
 };
 
 onMounted(() => {
@@ -102,10 +111,12 @@ onMounted(() => {
   }, { passive: true });
 
   window.addEventListener('mousemove', handleMouseMove, { passive: true });
+  window.addEventListener('mouseover', handleMouseOver, { passive: true });
 });
 
 onUnmounted(() => {
   window.removeEventListener('mousemove', handleMouseMove);
+  window.removeEventListener('mouseover', handleMouseOver);
 });
 
 const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -128,7 +139,7 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
       </Transition>
     </div>
 
-    <div class="cursor-glow" :style="{ transform: `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)` }"></div>
+    <div class="cursor-glow" :style="{ transform: `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%) ${isHovering ? 'scale(0)' : 'scale(1)'}` }"></div>
 
     <div class="bg-glow bg-glow-1"></div>
     <div class="bg-glow bg-glow-2"></div>
