@@ -32,6 +32,10 @@ let scrollTicking = false;
 
 const mouseX = ref(window.innerWidth / 2);
 const mouseY = ref(window.innerHeight / 2);
+const isLoading = ref(true);
+const loadingProgress = ref(0);
+const showLoaderContent = ref(true);
+const expandHole = ref(false);
 
 const handleMouseMove = (e) => {
   mouseX.value = e.clientX;
@@ -39,6 +43,28 @@ const handleMouseMove = (e) => {
 };
 
 onMounted(() => {
+  const duration = 5000;
+  const startTime = performance.now();
+  
+  const updateProgress = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min((elapsed / duration) * 100, 100);
+    loadingProgress.value = Math.floor(progress);
+    
+    if (progress < 100) {
+      requestAnimationFrame(updateProgress);
+    } else {
+      showLoaderContent.value = false;
+      setTimeout(() => {
+        expandHole.value = true;
+        setTimeout(() => {
+          isLoading.value = false;
+        }, 1800);
+      }, 400);
+    }
+  };
+  requestAnimationFrame(updateProgress);
+
     const ANIM_CLASSES = '.fade-up, .fade-left, .fade-right, .fade-scale, .fade-blur';
   const fadeObs = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -87,6 +113,21 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
 <template>
   <div class="app-wrapper">
+    <div v-if="isLoading" class="loading-wrapper">
+      <div class="reveal-hole" :class="{ 'expand': expandHole }"></div>
+      <Transition name="fade-content">
+        <div v-if="showLoaderContent" class="loader-content">
+          <div class="loader-logo">
+            <span class="text-gradient">&lt;huynvg-04/&gt;</span>
+          </div>
+          <div class="loader-percentage">{{ loadingProgress }}%</div>
+          <div class="loader-progress">
+            <div class="loader-progress-bar" :style="{ width: loadingProgress + '%' }"></div>
+          </div>
+        </div>
+      </Transition>
+    </div>
+
     <div class="cursor-glow" :style="{ transform: `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)` }"></div>
 
     <div class="bg-glow bg-glow-1"></div>
@@ -169,6 +210,88 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
 <style>
 .app-wrapper { min-height: 100vh; position: relative; }
+
+.loading-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+}
+.reveal-hole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: 0 0 10vmax 200vmax var(--bg-dark);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  transition: width 1.8s cubic-bezier(0.4, 0, 0.2, 1), height 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reveal-hole.expand {
+  width: 300vmax;
+  height: 300vmax;
+  pointer-events: none;
+}
+.loader-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  pointer-events: auto;
+}
+.loader-logo {
+  font-family: var(--font-code);
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  animation: float-pulse 2s ease-in-out infinite;
+}
+.loader-percentage {
+  font-family: var(--font-code);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-top: -0.75rem;
+  letter-spacing: 0.05em;
+}
+.loader-progress {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+}
+.loader-progress-bar {
+  height: 100%;
+  background: var(--aurora-gradient);
+  background-size: 300% 100%;
+  animation: aurora 3s linear infinite;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(194, 164, 255, 0.4);
+}
+
+@keyframes float-pulse {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-5px); opacity: 0.7; }
+}
+
+.fade-content-enter-active, .fade-content-leave-active {
+  transition: opacity 0.4s ease, filter 0.4s ease, transform 0.4s ease;
+}
+.fade-content-enter-from, .fade-content-leave-to {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translate(-50%, -60%);
+}
 
 .cursor-glow {
   position: fixed;

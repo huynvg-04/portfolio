@@ -1,4 +1,78 @@
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
+
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
+const topWord = 'FULL-STACK';
+const bottomWord = 'DEVELOPER';
+
+const topDisplay = ref(topWord.split('').map(() => ' '));
+const bottomDisplay = ref(bottomWord.split('').map(() => ' '));
+
+const lockedTop = ref(topWord.split('').map(() => false));
+const lockedBottom = ref(bottomWord.split('').map(() => false));
+
+let timers = [];
+
+function randomChar() {
+  return CHARS[Math.floor(Math.random() * CHARS.length)];
+}
+
+function slotReveal(targetWord, displayRef, lockedRef, startDelay) {
+  targetWord.split('').forEach((finalChar, i) => {
+    if (finalChar === '-') {
+      setTimeout(() => {
+        displayRef.value[i] = '‑';
+        lockedRef.value[i] = true;
+      }, startDelay + i * 180);
+      return;
+    }
+
+    const spinDuration = 900 + i * 160;
+    const interval = 60;
+    const spinEnd = startDelay + i * 180 + spinDuration;
+    let t = startDelay;
+
+    const spin = () => {
+      if (Date.now() >= spinEnd) {
+        displayRef.value[i] = finalChar;
+        lockedRef.value[i] = true;
+        return;
+      }
+      if (!lockedRef.value[i]) displayRef.value[i] = randomChar();
+      const id = setTimeout(spin, interval);
+      timers.push(id);
+    };
+
+    const id = setTimeout(spin, startDelay + i * 120);
+    timers.push(id);
+  });
+}
+
+function runAnimation() {
+  lockedTop.value = topWord.split('').map(() => false);
+  lockedBottom.value = bottomWord.split('').map(() => false);
+  topDisplay.value = topWord.split('').map(() => randomChar());
+  bottomDisplay.value = bottomWord.split('').map(() => randomChar());
+
+  slotReveal(topWord, topDisplay, lockedTop, 0);
+  slotReveal(bottomWord, bottomDisplay, lockedBottom, 300);
+}
+
+let loopId = null;
+
+onMounted(() => {
+  runAnimation();
+  loopId = setInterval(() => {
+    timers.forEach(clearTimeout);
+    timers = [];
+    runAnimation();
+  }, 5000);
+});
+
+onUnmounted(() => {
+  timers.forEach(clearTimeout);
+  if (loopId) clearInterval(loopId);
+});
 </script>
 
 <template>
@@ -16,20 +90,28 @@
     </div>
 
     <div class="container hero-content">
-      
+
       <div class="hero-left fade-up visible" data-delay="200">
         <span class="greeting">Hello! I'm</span>
         <h1 class="name">
-          <span>NGÔ VĂN</span>
+          <span>NGO VAN</span>
           <span>GIA HUY</span>
         </h1>
       </div>
 
       <div class="hero-right fade-left visible" data-delay="300">
         <span class="role-prefix">A Creative</span>
-        <div class="role-group">
-          <span class="role-bg">DEVELOPER</span>
-          <span class="role-fg">FULL-STACK</span>
+        <div class="kt-block">
+          <!-- Top row: FULL-STACK — large neon purple -->
+          <div class="kt-row kt-bg">
+            <span v-for="(char, i) in topDisplay" :key="i" class="kt-char" :class="{ locked: lockedTop[i] }">{{ char
+            }}</span>
+          </div>
+          <!-- Bottom row: DEVELOPER — solid white -->
+          <div class="kt-row kt-fg">
+            <span v-for="(char, i) in bottomDisplay" :key="i" class="kt-char" :class="{ locked: lockedBottom[i] }">{{
+              char }}</span>
+          </div>
         </div>
       </div>
 
@@ -81,12 +163,13 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 6rem 0 9rem; /* Left padding ensures it clears the sidebar */
+  padding: 0 6rem 0 9rem;
   position: relative;
   z-index: 1;
 }
 
-.greeting, .role-prefix {
+.greeting,
+.role-prefix {
   display: block;
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(1.1rem, 1.8vw, 1.5rem);
@@ -94,7 +177,6 @@
   margin-bottom: 0.5rem;
   font-weight: 400;
   letter-spacing: 0.04em;
-  font-style: italic;
 }
 
 .hero-left {
@@ -124,38 +206,74 @@
   text-align: right;
 }
 
-.role-group {
-  position: relative;
-  display: inline-block;
-  margin-top: -0.5rem;
-}
-
-.role-bg {
-  display: block;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(5rem, 10vw, 9rem);
-  font-weight: 400;
-  color: transparent;
-  -webkit-text-stroke: 2px rgba(214, 173, 255, 0.5);
-  letter-spacing: 0.06em;
+/* ── Kinetic block ── */
+.kt-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   line-height: 1;
+  margin-top: 0.25rem;
+  position: relative;
+}
+
+.kt-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.kt-fg {
+  margin-top: -2em;
+  z-index: 2;
+}
+
+.kt-bg {
+  z-index: 1;
+}
+
+/* Individual characters */
+.kt-char {
+  display: inline-block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 900;
   text-transform: uppercase;
+  letter-spacing: -0.02em;
+  transition: color 0.12s ease, text-shadow 0.2s ease;
+  box-shadow: 50px #000000;
+  text-shadow: 50px #000000;
 }
 
-.role-fg {
-  position: absolute;
-  top: 55%;
-  right: 0;
-  transform: translateY(-50%);
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3.5rem, 7vw, 6.5rem);
-  font-weight: 400;
-  color: #fff;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  text-shadow: 0 4px 30px rgba(0,0,0,0.9);
+/* Top row — FULL-STACK: large, neon purple outline */
+.kt-bg .kt-char {
+  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  color: rgba(180, 120, 255, 0.5);
+  -webkit-text-stroke: 1.5px rgba(180, 120, 255, 0.75);
+  filter: drop-shadow(0 0 10px rgba(160, 80, 255, 0.4));
 }
 
+.kt-bg .kt-char.locked {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(180, 120, 255, 0.75);
+  filter: drop-shadow(0 0 14px rgba(160, 80, 255, 0.6));
+}
+
+/* Bottom row — DEVELOPER: solid white */
+.kt-fg .kt-char {
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  color: rgba(200, 200, 200, 0.45);
+  text-shadow: none;
+}
+
+.kt-fg .kt-char.locked {
+  color: #ffffff;
+  text-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(200, 160, 255, 0.15);
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.6));
+}
+
+/* ── Responsive ── */
 @media (max-width: 1024px) {
   .hero-content {
     flex-direction: column;
@@ -164,19 +282,22 @@
     padding: 0 3rem 0 6rem;
     text-align: center;
   }
-  
+
   .hero-left {
     align-items: center;
   }
-  
+
   .hero-right {
     align-items: center;
     text-align: center;
   }
-  
-  .role-fg {
-    right: 50%;
-    transform: translate(50%, -50%);
+
+  .kt-block {
+    align-items: center;
+  }
+
+  .kt-row {
+    justify-content: center;
   }
 }
 
@@ -184,20 +305,32 @@
   .hero-content {
     padding: 0 1.5rem;
   }
-  
+
   .social-sidebar {
     display: none;
   }
-  
-  .name span { font-size: 3rem; }
-  .role-bg { font-size: 4.5rem; }
-  .role-fg { font-size: 3rem; }
+
+  .name span {
+    font-size: 3rem;
+  }
+
+  .kt-bg .kt-char {
+    font-size: 2.4rem;
+  }
+
+  .kt-fg .kt-char {
+    font-size: 1.8rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .name span { font-size: 2.4rem; }
-  .role-bg { font-size: 3.5rem; -webkit-text-stroke: 1.5px rgba(214, 173, 255, 0.5); }
-  .role-fg { font-size: 2.5rem; }
-  .greeting, .role-prefix { font-size: 1rem; }
+  .name span {
+    font-size: 2.4rem;
+  }
+
+  .greeting,
+  .role-prefix {
+    font-size: 1rem;
+  }
 }
 </style>

@@ -1,9 +1,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 
-const isScrolled    = ref(false);
-const menuOpen      = ref(false);
-const scrollProgress= ref(0);
+const isScrolled = ref(false);
+const menuOpen = ref(false);
+const scrollProgress = ref(0);
 const activeSection = ref('hero');
 
 const sections = ['hero', 'about', 'projects', 'contact'];
@@ -11,12 +11,12 @@ const sections = ['hero', 'about', 'projects', 'contact'];
 
 
 const toggleMenu = () => { menuOpen.value = !menuOpen.value; };
-const closeMenu  = () => { menuOpen.value = false; };
+const closeMenu = () => { menuOpen.value = false; };
 
 const handleScroll = () => {
-  const scrollY   = window.scrollY;
+  const scrollY = window.scrollY;
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  isScrolled.value    = scrollY > 60;
+  isScrolled.value = scrollY > 60;
   scrollProgress.value = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
 
   for (const id of sections) {
@@ -47,32 +47,32 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
         <span class="logo-bracket">/&gt;</span>
       </a>
 
-      <ul class="nav-links">
-        <li v-for="s in [['#about','Giới Thiệu'],['#projects','Dự Án'],['#contact','Liên Hệ']]" :key="s[0]">
-          <a :href="s[0]" :class="{ active: activeSection === s[0].slice(1) }">
-            {{ s[1] }}
-          </a>
-        </li>
-      </ul>
-
       <div class="nav-actions">
 
-        <a href="#contact" class="btn btn-outline nav-cta" @click="closeMenu">Kết Nối Ngay</a>
+        <a href="#contact" class="btn btn-outline nav-cta" @click="closeMenu">ngovangiahuy04@gmail.com</a>
         <button class="hamburger" @click="toggleMenu" :aria-expanded="menuOpen" aria-label="Menu">
           <span :class="{ open: menuOpen }"></span>
           <span :class="{ open: menuOpen }"></span>
           <span :class="{ open: menuOpen }"></span>
         </button>
       </div>
+
+      <ul class="nav-links">
+        <li v-for="s in [['#about', 'Giới Thiệu'], ['#projects', 'Dự Án'], ['#contact', 'Liên Hệ']]" :key="s[0]">
+          <a :href="s[0]" :class="{ active: activeSection === s[0].slice(1) }">
+            {{ s[1] }}
+          </a>
+        </li>
+      </ul>
     </div>
   </nav>
 
   <div :class="['mobile-drawer', { open: menuOpen }]" @click.self="closeMenu">
     <div class="drawer-content">
       <ul>
-        <li><a href="#about"    @click="closeMenu">Giới Thiệu</a></li>
+        <li><a href="#about" @click="closeMenu">Giới Thiệu</a></li>
         <li><a href="#projects" @click="closeMenu">Dự Án</a></li>
-        <li><a href="#contact"  @click="closeMenu">Liên Hệ</a></li>
+        <li><a href="#contact" @click="closeMenu">Liên Hệ</a></li>
       </ul>
       <a href="#contact" class="btn btn-primary drawer-cta" @click="closeMenu">Kết Nối Ngay</a>
     </div>
@@ -100,23 +100,18 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   z-index: 1000;
   padding: 1.4rem 0;
   border-bottom: 1px solid transparent;
+  background: rgba(5, 4, 5, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
   transition:
-    padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     background 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     backdrop-filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.navbar.scrolled {
-  padding: 0.9rem 0;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom-color: var(--border-glass);
-}
 
-.navbar.scrolled {
-  background: rgba(5, 4, 5, 0.88);
-}
 
 .nav-content {
   display: flex;
@@ -214,9 +209,18 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   transform-origin: center;
 }
 
-.hamburger span.open:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.hamburger span.open:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.hamburger span.open:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.hamburger span.open:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger span.open:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger span.open:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
 
 .mobile-drawer {
   display: none;
@@ -273,28 +277,66 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   border-bottom: 1px solid var(--border-glass);
 }
 
-.drawer-content ul a:hover { color: var(--accent); }
+.drawer-content ul a:hover {
+  color: var(--accent);
+}
 
-.drawer-cta { justify-content: center; width: 100%; }
+.drawer-cta {
+  justify-content: center;
+  width: 100%;
+}
 
 @media (max-width: 768px) {
-  .nav-content { padding: 0 1.5rem; }
-  .nav-links { display: none; }
-  .nav-cta   { display: none; }
-  .hamburger { display: flex; }
-  .mobile-drawer { display: block; }
-  .navbar { padding: 1rem 0; }
-  .navbar.scrolled { padding: 0.75rem 0; }
+  .nav-content {
+    padding: 0 1.5rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-cta {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .mobile-drawer {
+    display: block;
+  }
+
+  .navbar {
+    padding: 1rem 0;
+  }
+
+  .navbar.scrolled {
+    padding: 0.75rem 0;
+  }
 }
 
 @media (max-width: 480px) {
-  .logo { font-size: 1.2rem; }
-  .hamburger { padding: 4px; }
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .hamburger {
+    padding: 4px;
+  }
 }
 
 @media (max-width: 360px) {
-  .logo { font-size: 1.1rem; }
-  .drawer-content { padding: 5rem 1.75rem 2rem; }
-  .drawer-content ul a { font-size: 1.2rem; }
+  .logo {
+    font-size: 1.1rem;
+  }
+
+  .drawer-content {
+    padding: 5rem 1.75rem 2rem;
+  }
+
+  .drawer-content ul a {
+    font-size: 1.2rem;
+  }
 }
 </style>
