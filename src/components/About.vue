@@ -2,14 +2,19 @@
 import { onMounted } from 'vue';
 
 const techStack = [
-  { icon: 'fa-brands fa-vuejs', color: '#42b883', name: 'Vue.js' },
+  { icon: 'fa-brands fa-html5', color: '#e34f26', name: 'HTML5' },
+  { icon: 'fa-brands fa-css3-alt', color: '#1572b6', name: 'CSS3' },
   { icon: 'fa-brands fa-js', color: '#f7df1e', name: 'JavaScript' },
-  { icon: 'fa-brands fa-laravel', color: '#ff2d20', name: 'Laravel' },
+  { icon: 'fa-brands fa-vuejs', color: '#42b883', name: 'Vue.js' },
+  { icon: 'fa-brands fa-react', color: '#61dafb', name: 'React.js' },
   { icon: 'fa-brands fa-php', color: '#777bb4', name: 'PHP' },
+  { icon: 'fa-brands fa-laravel', color: '#ff2d20', name: 'Laravel' },
   { icon: 'fa-brands fa-node-js', color: '#68a063', name: 'Node.js' },
-  { icon: 'fa-brands fa-figma', color: '#a259ff', name: 'Figma' },
+  { icon: 'fa-brands fa-bootstrap', color: '#7952b3', name: 'Bootstrap' },
+  { icon: 'fa-solid fa-wind', color: '#38bdf8', name: 'Tailwind CSS' },
   { icon: 'fa-solid fa-database', color: '#fb923c', name: 'SQL' },
   { icon: 'fa-brands fa-git-alt', color: '#f05032', name: 'Git' },
+  { icon: 'fa-brands fa-figma', color: '#a259ff', name: 'Figma' },
 ];
 
 onMounted(() => {
@@ -50,11 +55,8 @@ onMounted(() => {
               </div>
             </div>
             <p class="bio-text">
-              I am a developer passionate about building practical and beautiful web products. 
-              I don't just write code to make systems work, but focus heavily on 
-              <strong>User Experience (UX)</strong> and <strong>Performance</strong>. 
-              <br><br>
-              I'm always curious to learn new technologies and strive to bring real value through every line of code.
+              I'm a full-stack developer focused on building <strong>clean</strong>, <strong>efficient</strong>, and <strong>visually stunning</strong> web applications. <br><br>
+              I bridge the gap between intuitive design and robust technical architecture to deliver high-quality digital experiences.
             </p>
           </div>
         </div>

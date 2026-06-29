@@ -211,7 +211,7 @@ section {
   background: var(--card-gradient);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-glass);
+  border: 0.5px solid rgba(255, 255, 255, 0.352);
   border-radius: var(--radius);
   padding: 2rem;
   transition: var(--transition);

@@ -92,10 +92,6 @@ watch(visibleItems, () => nextTick(updateTranslate));
       <!-- ── Header ─────────────────────────────── -->
       <div class="proj-header">
         <h2 class="proj-heading">My <span class="text-gradient">Projects</span></h2>
-        <div class="filter-tabs">
-          <button v-for="f in filters" :key="f" :class="['filter-btn', { active: activeFilter === f }]"
-            @click="activeFilter = f">{{ f }}</button>
-        </div>
       </div>
 
       <!-- ── Horizontal track ────────────────────── -->
@@ -226,7 +222,7 @@ watch(visibleItems, () => nextTick(updateTranslate));
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6rem 5vw 1.25rem;
+  padding: 6rem 5vw 1.25rem 9rem;
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.352);
   flex-shrink: 0;
 }
@@ -636,8 +632,8 @@ watch(visibleItems, () => nextTick(updateTranslate));
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.85rem 5vw;
-  border-top: 1px solid var(--border-glass);
+  padding: 0.85rem 5vw 0.85rem 9rem;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.352);
   flex-shrink: 0;
 }
 

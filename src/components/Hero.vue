@@ -1,76 +1,57 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import gsap from 'gsap';
 
-const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
-const topWord = 'FULL-STACK';
-const bottomWord = 'DEVELOPER';
+const roles = [
+  { top: 'FULL-STACK', bottom: 'DEVELOPER' }
+];
 
-const topDisplay = ref(topWord.split('').map(() => ' '));
-const bottomDisplay = ref(bottomWord.split('').map(() => ' '));
-
-const lockedTop = ref(topWord.split('').map(() => false));
-const lockedBottom = ref(bottomWord.split('').map(() => false));
-
-let timers = [];
-
-function randomChar() {
-  return CHARS[Math.floor(Math.random() * CHARS.length)];
-}
-
-function slotReveal(targetWord, displayRef, lockedRef, startDelay) {
-  targetWord.split('').forEach((finalChar, i) => {
-    if (finalChar === '-') {
-      setTimeout(() => {
-        displayRef.value[i] = '‑';
-        lockedRef.value[i] = true;
-      }, startDelay + i * 180);
-      return;
-    }
-
-    const spinDuration = 900 + i * 160;
-    const interval = 60;
-    const spinEnd = startDelay + i * 180 + spinDuration;
-    let t = startDelay;
-
-    const spin = () => {
-      if (Date.now() >= spinEnd) {
-        displayRef.value[i] = finalChar;
-        lockedRef.value[i] = true;
-        return;
-      }
-      if (!lockedRef.value[i]) displayRef.value[i] = randomChar();
-      const id = setTimeout(spin, interval);
-      timers.push(id);
-    };
-
-    const id = setTimeout(spin, startDelay + i * 120);
-    timers.push(id);
-  });
-}
-
-function runAnimation() {
-  lockedTop.value = topWord.split('').map(() => false);
-  lockedBottom.value = bottomWord.split('').map(() => false);
-  topDisplay.value = topWord.split('').map(() => randomChar());
-  bottomDisplay.value = bottomWord.split('').map(() => randomChar());
-
-  slotReveal(topWord, topDisplay, lockedTop, 0);
-  slotReveal(bottomWord, bottomDisplay, lockedBottom, 300);
-}
-
+const currentIndex = ref(0);
+const incomingRole = ref(roles[0]);
+const outgoingRole = ref(null);
 let loopId = null;
 
+async function animateTicker() {
+  outgoingRole.value = incomingRole.value;
+  currentIndex.value = (currentIndex.value + 1) % roles.length;
+  incomingRole.value = roles[currentIndex.value];
+
+  await nextTick();
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      outgoingRole.value = null;
+    }
+  });
+
+  // Top row animation
+  const STAGGER_TIME = 0.1;
+  const ANIM_DURATION = 1.2;
+
+  tl.to('.outgoing-word.top-row .kt-char', { y: -80, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" }, 0);
+  tl.fromTo('.incoming-word.top-row .kt-char', 
+    { y: 80 }, 
+    { y: 0, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" }, 
+    0
+  );
+
+  // Bottom row animation (slightly delayed for a staggered effect)
+  tl.to('.outgoing-word.bottom-row .kt-char', { y: -80, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" }, 0.2);
+  tl.fromTo('.incoming-word.bottom-row .kt-char', 
+    { y: 80 }, 
+    { y: 0, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" }, 
+    0.2
+  );
+}
+
 onMounted(() => {
-  runAnimation();
+  // Start the GSAP text ticker loop every 4 seconds
   loopId = setInterval(() => {
-    timers.forEach(clearTimeout);
-    timers = [];
-    runAnimation();
-  }, 5000);
+    animateTicker();
+  }, 4000);
 });
 
 onUnmounted(() => {
-  timers.forEach(clearTimeout);
   if (loopId) clearInterval(loopId);
 });
 </script>
@@ -91,26 +72,36 @@ onUnmounted(() => {
 
     <div class="container hero-content">
 
-      <div class="hero-left fade-up visible" data-delay="200">
-        <span class="greeting">Hello! I'm</span>
+      <div class="hero-left" data-delay="200">
+        <span class="greeting split-text">Hello! I'm</span>
         <h1 class="name">
-          <span>NGO VAN</span>
-          <span>GIA HUY</span>
+          <span class="split-text">NGO VAN</span>
+          <span class="split-text">GIA HUY</span>
         </h1>
       </div>
 
       <div class="hero-right fade-left visible" data-delay="300">
         <span class="role-prefix">A Creative</span>
         <div class="kt-block">
-          <!-- Top row: FULL-STACK — large neon purple -->
           <div class="kt-row kt-bg">
-            <span v-for="(char, i) in topDisplay" :key="i" class="kt-char" :class="{ locked: lockedTop[i] }">{{ char
-            }}</span>
+            <div v-if="outgoingRole" class="word-wrapper outgoing-word top-row">
+              <span v-for="(char, i) in outgoingRole.top.split('')" :key="`out-${i}`" class="kt-char"
+                v-html="char === ' ' ? '&nbsp;' : char"></span>
+            </div>
+            <div v-if="incomingRole" class="word-wrapper incoming-word top-row">
+              <span v-for="(char, i) in incomingRole.top.split('')" :key="`in-${i}`" class="kt-char"
+                v-html="char === ' ' ? '&nbsp;' : char"></span>
+            </div>
           </div>
-          <!-- Bottom row: DEVELOPER — solid white -->
           <div class="kt-row kt-fg">
-            <span v-for="(char, i) in bottomDisplay" :key="i" class="kt-char" :class="{ locked: lockedBottom[i] }">{{
-              char }}</span>
+            <div v-if="outgoingRole" class="word-wrapper outgoing-word bottom-row">
+              <span v-for="(char, i) in outgoingRole.bottom.split('')" :key="`out-${i}`" class="kt-char"
+                v-html="char === ' ' ? '&nbsp;' : char"></span>
+            </div>
+            <div v-if="incomingRole" class="word-wrapper incoming-word bottom-row">
+              <span v-for="(char, i) in incomingRole.bottom.split('')" :key="`in-${i}`" class="kt-char"
+                v-html="char === ' ' ? '&nbsp;' : char"></span>
+            </div>
           </div>
         </div>
       </div>
@@ -130,14 +121,18 @@ onUnmounted(() => {
 }
 
 .social-sidebar {
-  position: absolute;
+  position: fixed;
   left: 3rem;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 3rem;
+  top: auto;
+  transform: none;
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  z-index: 10;
+  z-index: 9000;
+  padding: 1.5rem 1rem;
+  border-radius: 50px;
+  transition: all 0.2s ease-out;
 }
 
 .social-sidebar a {
@@ -150,10 +145,41 @@ onUnmounted(() => {
   justify-content: center;
 }
 
+.social-sidebar:hover {
+  background: rgb(226, 198, 255);
+  box-shadow: 0 0 30px 5px rgba(214, 173, 255, 0.8);
+}
+
+.social-sidebar:hover a {
+  color: var(--bg-dark);
+}
+
+@keyframes smooth-shake {
+
+  0%,
+  100% {
+    transform: scale(1.15) translate(0, 0) rotate(0deg);
+  }
+
+  20% {
+    transform: scale(1.15) translate(0.8px, -0.8px) rotate(-2deg);
+  }
+
+  40% {
+    transform: scale(1.15) translate(-0.8px, 0.8px) rotate(2deg);
+  }
+
+  60% {
+    transform: scale(1.15) translate(0.8px, 0.8px) rotate(-2deg);
+  }
+
+  80% {
+    transform: scale(1.15) translate(-0.8px, -0.8px) rotate(2deg);
+  }
+}
+
 .social-sidebar a:hover {
-  color: #fff;
-  transform: scale(1.15) translateY(-2px);
-  text-shadow: 0 0 10px rgba(214, 173, 255, 0.4);
+  animation: smooth-shake 0.4s infinite ease-in-out;
 }
 
 .hero-content {
@@ -184,13 +210,47 @@ onUnmounted(() => {
   flex-direction: column;
 }
 
+/* Hiệu ứng trồi lên lặp lại liên tục (từ dưới lên, nhịp chậm hơn) */
+@keyframes split-pop-loop {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  8% {
+    transform: translateY(25px) scale(0.95);
+  }
+
+  /* Nhún xuống dưới */
+  25% {
+    transform: translateY(-30px) scale(1.15);
+    color: var(--accent);
+  }
+
+  /* Trồi lên trên */
+  45% {
+    transform: translateY(0) scale(1);
+    color: inherit;
+  }
+
+  /* Về vị trí cũ */
+}
+
+.hero-left :deep(.split-char) {
+  transition: none !important;
+  opacity: 1 !important;
+  animation: split-pop-loop 6s infinite ease-in-out;
+  animation-delay: calc(var(--i, 0) * 0.12s) !important;
+}
+
 .name {
   display: flex;
   flex-direction: column;
   line-height: 1.05;
 }
 
-.name span {
+.name>span {
   font-family: 'Space Grotesk', sans-serif;
   font-size: clamp(1.5rem, 2vw, 6rem);
   font-weight: 700;
@@ -223,6 +283,18 @@ onUnmounted(() => {
   position: relative;
 }
 
+.word-wrapper {
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.outgoing-word {
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+}
+
 .kt-fg {
   margin-top: -2em;
   z-index: 2;
@@ -239,38 +311,18 @@ onUnmounted(() => {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.02em;
-  transition: color 0.12s ease, text-shadow 0.2s ease;
-  box-shadow: 50px #000000;
-  text-shadow: 50px #000000;
 }
 
 /* Top row — FULL-STACK: large, neon purple outline */
 .kt-bg .kt-char {
   font-size: clamp(2.8rem, 5.5vw, 5rem);
-  color: rgba(180, 120, 255, 0.5);
-  -webkit-text-stroke: 1.5px rgba(180, 120, 255, 0.75);
-  filter: drop-shadow(0 0 10px rgba(160, 80, 255, 0.4));
-}
-
-.kt-bg .kt-char.locked {
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(180, 120, 255, 0.75);
-  filter: drop-shadow(0 0 14px rgba(160, 80, 255, 0.6));
+  color: #c481ff;
 }
 
 /* Bottom row — DEVELOPER: solid white */
 .kt-fg .kt-char {
   font-size: clamp(2rem, 4vw, 3.8rem);
-  color: rgba(200, 200, 200, 0.45);
-  text-shadow: none;
-}
-
-.kt-fg .kt-char.locked {
-  color: #ffffff;
-  text-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.8),
-    0 0 40px rgba(200, 160, 255, 0.15);
-  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.6));
+  color: #fff;
 }
 
 /* ── Responsive ── */

@@ -4,8 +4,13 @@ import Hero from './components/Hero.vue';
 import About from './components/About.vue';
 import Projects from './components/Projects.vue';
 import Contact from './components/Contact.vue';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import Lenis from 'lenis';
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
 
 const splitAndAnimate = (selector) => {
   document.querySelectorAll(selector).forEach(el => {
@@ -39,13 +44,21 @@ const loadingProgress = ref(0);
 const showLoaderContent = ref(true);
 const expandHole = ref(false);
 
+watch(isLoading, (newVal) => {
+  if (newVal) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
+  }
+}, { immediate: true });
+
 const handleMouseMove = (e) => {
   mouseX.value = e.clientX;
   mouseY.value = e.clientY;
 };
 
 const handleMouseOver = (e) => {
-  if (e.target.closest('a, button, [role="button"], .filter-btn, .slide-btn')) {
+  if (e.target.closest('a, button, [role="button"], .filter-btn, .slide-btn, .social-sidebar')) {
     isHovering.value = true;
   } else {
     isHovering.value = false;
@@ -213,22 +226,6 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
       <Contact />
     </main>
 
-    <footer class="footer">
-      <div class="container footer-inner">
-        <a href="#hero" class="footer-logo">
-          <span class="text-gradient">&lt;huynvg-04/&gt;</span>
-        </a>
-        <p class="footer-copy">
-          &copy; 2026 Ngo Van Gia Huy &mdash; Designed with
-          <i class="fa-solid fa-heart" style="color:#f472b6; margin: 0 3px;"></i>
-          &amp; lots of coffee
-        </p>
-        <button class="back-to-top" @click="scrollTop" aria-label="Back to top" id="back-to-top">
-          <i class="fa-solid fa-arrow-up"></i>
-        </button>
-      </div>
-      <div class="footer-gradient-bar"></div>
-    </footer>
   </div>
 </template>
 
@@ -400,35 +397,5 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
   .split-char { transform: none; opacity: 1; transition: none; }
-}
-</style>
-
-<style scoped>
-.footer { position: relative; padding: 2.5rem 0 0; overflow: hidden; }
-.footer-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  padding-bottom: 2rem; border-top: 1px solid var(--border-glass);
-  padding-top: 1.75rem; gap: 1rem; flex-wrap: wrap;
-}
-.footer-logo { font-size: 1.2rem; font-weight: 800; text-decoration: none; font-family: var(--font-code); }
-.footer-copy { color: var(--text-muted); font-size: 0.9rem; text-align: center; }
-.back-to-top {
-  width: 42px; height: 42px; border-radius: 50%;
-  background: var(--bg-glass); border: 1px solid var(--border-glass);
-  color: var(--text-muted); cursor: pointer; display: flex;
-  align-items: center; justify-content: center; font-size: 1rem;
-  transition: var(--transition); flex-shrink: 0;
-}
-.back-to-top:hover {
-  background: var(--accent-gradient); color: #fff; border-color: transparent;
-  transform: translateY(-3px); box-shadow: 0 8px 20px var(--shadow-glow);
-}
-.footer-gradient-bar {
-  height: 3px; background: var(--aurora-gradient); background-size: 300% 100%;
-  animation: aurora 5s linear infinite; opacity: 0.7;
-}
-@media (max-width: 600px) {
-  .footer-inner { flex-direction: column; text-align: center; }
-  .back-to-top  { margin: 0 auto; }
 }
 </style>
