@@ -49,7 +49,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 
       <div class="nav-actions">
 
-        <a href="#contact" class="btn btn-outline nav-cta" @click="closeMenu">ngovangiahuy04@gmail.com</a>
+        <a href="mailto:ngovangiahuy04@gmail.com" class="nav-email-link" @click="closeMenu">ngovangiahuy04@gmail.com</a>
         <button class="hamburger" @click="toggleMenu" :aria-expanded="menuOpen" aria-label="Menu">
           <span :class="{ open: menuOpen }"></span>
           <span :class="{ open: menuOpen }"></span>
@@ -58,7 +58,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
       </div>
 
       <ul class="nav-links">
-        <li v-for="s in [['#about', 'Giới Thiệu'], ['#projects', 'Dự Án'], ['#contact', 'Liên Hệ']]" :key="s[0]">
+        <li v-for="s in [['#about', 'About'], ['#projects', 'Projects'], ['#contact', 'Contact']]" :key="s[0]">
           <a :href="s[0]" :class="{ active: activeSection === s[0].slice(1) }">
             {{ s[1] }}
           </a>
@@ -70,11 +70,11 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   <div :class="['mobile-drawer', { open: menuOpen }]" @click.self="closeMenu">
     <div class="drawer-content">
       <ul>
-        <li><a href="#about" @click="closeMenu">Giới Thiệu</a></li>
-        <li><a href="#projects" @click="closeMenu">Dự Án</a></li>
-        <li><a href="#contact" @click="closeMenu">Liên Hệ</a></li>
+        <li><a href="#about" @click="closeMenu">About</a></li>
+        <li><a href="#projects" @click="closeMenu">Projects</a></li>
+        <li><a href="#contact" @click="closeMenu">Contact</a></li>
       </ul>
-      <a href="#contact" class="btn btn-primary drawer-cta" @click="closeMenu">Kết Nối Ngay</a>
+      <a href="#contact" class="btn btn-primary drawer-cta" @click="closeMenu">Let's Connect</a>
     </div>
   </div>
 </template>
@@ -182,9 +182,16 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   gap: 0.75rem;
 }
 
-.nav-cta {
-  padding: 0.6rem 1.4rem;
-  font-size: 0.9rem;
+.nav-email-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.nav-email-link:hover {
+  color: var(--accent);
 }
 
 

@@ -29,9 +29,9 @@ onMounted(() => {
 <template>
   <section id="about" class="about-section">
     <div class="container">
-      <h2 class="section-title">Về <span class="text-gradient">Tôi</span></h2>
+      <h2 class="section-title">About <span class="text-gradient">Me</span></h2>
       <p class="section-subtitle">
-        Khám phá hành trình, kỹ năng và những điều làm nên phong cách làm việc của tôi.
+        Discover my journey, skills, and what makes my work style unique.
       </p>
 
       <div class="bento-grid">
@@ -45,16 +45,16 @@ onMounted(() => {
                 <i class="fa-solid fa-user-astronaut"></i>
               </div>
               <div class="bio-title">
-                <h3>Chào, mình là <span class="text-gradient">Huy</span> 👋</h3>
-                <p class="role">Lập trình viên Fullstack</p>
+                <h3>Hi, I'm <span class="text-gradient">Huy</span> 👋</h3>
+                <p class="role">Fullstack Developer</p>
               </div>
             </div>
             <p class="bio-text">
-              Mình là một lập trình viên đam mê xây dựng các sản phẩm web thực tế và đẹp mắt. 
-              Mình không chỉ viết code để hệ thống chạy được, mà còn tập trung vào 
-              <strong>trải nghiệm người dùng (UX)</strong> và <strong>hiệu suất</strong>. 
+              I am a developer passionate about building practical and beautiful web products. 
+              I don't just write code to make systems work, but focus heavily on 
+              <strong>User Experience (UX)</strong> and <strong>Performance</strong>. 
               <br><br>
-              Mình luôn tò mò học hỏi công nghệ mới và mong muốn mang lại giá trị thực qua từng dòng code.
+              I'm always curious to learn new technologies and strive to bring real value through every line of code.
             </p>
           </div>
         </div>
@@ -66,9 +66,9 @@ onMounted(() => {
               <i class="fa-solid fa-earth-asia"></i>
             </div>
             <div class="loc-text">
-              <h4>Vị trí</h4>
-              <p>Việt Nam</p>
-              <span class="status-badge"><span class="dot"></span> Đang tìm kiếm cơ hội</span>
+              <h4>Location</h4>
+              <p>Vietnam</p>
+              <span class="status-badge"><span class="dot"></span> Open to work</span>
             </div>
           </div>
         </div>
@@ -91,21 +91,21 @@ onMounted(() => {
               <i class="fa-solid fa-gamepad"></i>
             </div>
             <div class="fact-text">
-              <h4>Sở thích</h4>
-              <p>Ngoài giờ code, mình thường chơi game, nghe nhạc indie và tìm hiểu về UI/UX Design.</p>
+              <h4>Hobbies</h4>
+              <p>When I'm not coding, you can find me playing games, listening to indie music, or exploring UI/UX Design.</p>
             </div>
           </div>
         </div>
 
         <!-- ── Card 5: Learning ── -->
         <div class="bento-item glass-card card-learning">
-          <h4><i class="fa-solid fa-book-open-reader"></i> Đang tìm hiểu</h4>
+          <h4><i class="fa-solid fa-book-open-reader"></i> Currently Learning</h4>
           <div class="learning-list">
             <div class="learn-item">
               <i class="fa-brands fa-react"></i> React / Next.js
             </div>
             <div class="learn-item">
-              <i class="fa-solid fa-server"></i> Kiến trúc Microservices
+              <i class="fa-solid fa-server"></i> Microservices Architecture
             </div>
           </div>
         </div>

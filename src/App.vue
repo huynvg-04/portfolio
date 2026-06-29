@@ -5,6 +5,7 @@ import About from './components/About.vue';
 import Projects from './components/Projects.vue';
 import Contact from './components/Contact.vue';
 import { onMounted, onUnmounted, ref } from 'vue';
+import Lenis from 'lenis';
 
 const splitAndAnimate = (selector) => {
   document.querySelectorAll(selector).forEach(el => {
@@ -52,6 +53,18 @@ const handleMouseOver = (e) => {
 };
 
 onMounted(() => {
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smooth: true,
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
   const duration = 5000;
   const startTime = performance.now();
   
@@ -206,11 +219,11 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
           <span class="text-gradient">&lt;huynvg-04/&gt;</span>
         </a>
         <p class="footer-copy">
-          &copy; 2026 Ng&ocirc; V&#259;n Gia Huy &mdash; Thi&#7871;t k&#7871; v&#7899;i
+          &copy; 2026 Ngo Van Gia Huy &mdash; Designed with
           <i class="fa-solid fa-heart" style="color:#f472b6; margin: 0 3px;"></i>
-          &amp; nhi&#7873;u c&agrave; ph&ecirc;
+          &amp; lots of coffee
         </p>
-        <button class="back-to-top" @click="scrollTop" aria-label="L&#234;n &#273;&#7847;u trang" id="back-to-top">
+        <button class="back-to-top" @click="scrollTop" aria-label="Back to top" id="back-to-top">
           <i class="fa-solid fa-arrow-up"></i>
         </button>
       </div>

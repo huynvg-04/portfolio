@@ -23,17 +23,17 @@ const submit = async () => {
   <section id="contact" class="contact-section">
     <div class="bg-glow-2 bg-glow" style="position:absolute;"></div>
     <div class="container">
-      <h2 class="section-title flip-in-left">Liên Hệ <span class="text-gradient">Với Tôi</span></h2>
+      <h2 class="section-title flip-in-left">Contact <span class="text-gradient">Me</span></h2>
       <p class="section-subtitle flip-in-left" data-flip-delay="150">
-        Tôi hiện đang tìm kiếm cơ hội mới. Hộp thư của tôi luôn mở — hãy nhắn tin bất cứ lúc nào!
+        I'm currently looking for new opportunities. My inbox is always open — drop me a message anytime!
       </p>
 
       <div class="contact-layout">
         <div class="contact-info flip-in-left" data-flip-delay="200">
           <div class="glass-card info-card">
-            <h3>Hãy cùng nhau xây dựng<br><span class="text-gradient">điều tuyệt vời</span></h3>
+            <h3>Let's build something<br><span class="text-gradient">amazing together</span></h3>
             <p class="info-sub">
-              Tôi có thể nhận dự án freelance và sẵn sàng tham gia vào đội nhóm có văn hóa phát triển tốt.
+              I'm open to freelance projects and excited to join a team with a great development culture.
             </p>
 
             <div class="info-items">
@@ -51,8 +51,8 @@ const submit = async () => {
                   <i class="fa-solid fa-location-dot"></i>
                 </div>
                 <div>
-                  <span class="info-label">Địa chỉ</span>
-                  <span class="info-value">Hà Nội, Việt Nam</span>
+                  <span class="info-label">Location</span>
+                  <span class="info-value">Vietnam</span>
                 </div>
               </div>
               <div class="info-item">
@@ -60,8 +60,8 @@ const submit = async () => {
                   <i class="fa-solid fa-circle-check"></i>
                 </div>
                 <div>
-                  <span class="info-label">Trạng thái</span>
-                  <span class="info-value available">Sẵn sàng nhận việc</span>
+                  <span class="info-label">Status</span>
+                  <span class="info-value available">Available to work</span>
                 </div>
               </div>
             </div>
@@ -83,13 +83,13 @@ const submit = async () => {
 
         <div class="contact-form-wrap flip-in-right" data-flip-delay="300">
           <div class="glass-card form-card">
-            <h3 class="form-title"><i class="fa-solid fa-paper-plane"></i> Gửi Tin Nhắn</h3>
+            <h3 class="form-title"><i class="fa-solid fa-paper-plane"></i> Send Message</h3>
 
             <form @submit.prevent="submit" class="contact-form" novalidate>
               <div class="field-group">
                 <div class="field">
-                  <label for="name">Tên của bạn</label>
-                  <input id="name" v-model="form.name" type="text" placeholder="Nguyễn Văn A" required :disabled="status==='loading'" />
+                  <label for="name">Your name</label>
+                  <input id="name" v-model="form.name" type="text" placeholder="John Doe" required :disabled="status==='loading'" />
                 </div>
                 <div class="field">
                   <label for="email">Email</label>
@@ -98,22 +98,22 @@ const submit = async () => {
               </div>
 
               <div class="field">
-                <label for="message">Tin nhắn</label>
+                <label for="message">Message</label>
                 <textarea id="message" v-model="form.message" rows="5"
-                  placeholder="Xin chào, tôi muốn hợp tác với bạn về dự án..." required
+                  placeholder="Hello, I'd like to collaborate with you on a project..." required
                   :disabled="status==='loading'"></textarea>
               </div>
 
               <button type="submit" class="btn btn-primary submit-btn"
                 :disabled="status === 'loading' || status === 'success'" id="contact-submit">
                 <template v-if="status === 'idle'">
-                  Gửi Tin Nhắn <i class="fa-solid fa-paper-plane"></i>
+                  Send Message <i class="fa-solid fa-paper-plane"></i>
                 </template>
                 <template v-else-if="status === 'loading'">
-                  <span class="spinner"></span> Đang gửi...
+                  <span class="spinner"></span> Sending...
                 </template>
                 <template v-else-if="status === 'success'">
-                  <i class="fa-solid fa-check"></i> Đã gửi thành công!
+                  <i class="fa-solid fa-check"></i> Sent successfully!
                 </template>
               </button>
             </form>

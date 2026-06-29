@@ -1,13 +1,13 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
 
-const activeFilter = ref('Tất Cả');
+const activeFilter = ref('All');
 
 const allProjects = [
   {
     num: '01',
     title: 'E-Commerce Platform',
-    subtitle: 'Thanh toán VNPAY & MoMo — Giỏ hàng real-time — Admin Dashboard',
+    subtitle: 'VNPAY & MoMo Payment — Real-time Cart — Admin Dashboard',
     category: 'Fullstack',
     tech: ['Laravel', 'MySQL', 'HTML', 'CSS', 'JavaScript'],
     color: '#38bdf8',
@@ -17,7 +17,7 @@ const allProjects = [
   {
     num: '02',
     title: 'Movie Website',
-    subtitle: 'Xem phim trực tuyến — Tìm kiếm & phân loại thể loại',
+    subtitle: 'Online Movie Streaming — Search & Genre Classification',
     category: 'Fullstack',
     tech: ['Laravel', 'MySQL', 'HTML', 'CSS'],
     color: '#a855f7',
@@ -32,13 +32,13 @@ const skeletons = [
 ];
 
 const filters = computed(() => [
-  'Tất Cả',
+  'All',
   ...new Set(allProjects.map(p => p.category)),
 ]);
 
 const visibleItems = computed(() => {
   const real =
-    activeFilter.value === 'Tất Cả'
+    activeFilter.value === 'All'
       ? allProjects
       : allProjects.filter(p => p.category === activeFilter.value);
   return [
@@ -91,7 +91,7 @@ watch(visibleItems, () => nextTick(updateTranslate));
 
       <!-- ── Header ─────────────────────────────── -->
       <div class="proj-header">
-        <h2 class="proj-heading">My <span class="text-gradient">Work</span></h2>
+        <h2 class="proj-heading">My <span class="text-gradient">Projects</span></h2>
         <div class="filter-tabs">
           <button v-for="f in filters" :key="f" :class="['filter-btn', { active: activeFilter === f }]"
             @click="activeFilter = f">{{ f }}</button>
@@ -125,7 +125,7 @@ watch(visibleItems, () => nextTick(updateTranslate));
 
             <template v-if="!item.isSkeleton">
               <div>
-                <p class="tech-label">Công nghệ sử dụng</p>
+                <p class="tech-label">Technologies Used</p>
                 <p class="tech-text">{{ item.tech.join(', ') }}</p>
               </div>
               <div class="slide-actions">
@@ -139,7 +139,7 @@ watch(visibleItems, () => nextTick(updateTranslate));
                 <div class="skel skel-label"></div>
                 <div class="skel skel-tech"></div>
               </div>
-              <span class="coming-badge">Sắp Ra Mắt</span>
+              <span class="coming-badge">Coming Soon</span>
             </template>
           </div>
 
@@ -194,10 +194,10 @@ watch(visibleItems, () => nextTick(updateTranslate));
         </div>
         <transition name="fade-hint">
           <span v-if="activeIndex < visibleItems.length - 1" class="scroll-hint" key="more">
-            Cuộn để xem tiếp →
+            Scroll to see more →
           </span>
           <span v-else class="scroll-hint done" key="done">
-            Cuộn để tiếp tục ↓
+            Scroll to continue ↓
           </span>
         </transition>
       </div>
@@ -274,6 +274,7 @@ watch(visibleItems, () => nextTick(updateTranslate));
   flex: 1;
   min-height: 0;
   will-change: transform;
+  transition: transform 0.1s cubic-bezier(0.21, 0.85, 0.35, 1);
 }
 
 .proj-slide {
@@ -458,7 +459,7 @@ watch(visibleItems, () => nextTick(updateTranslate));
   gap: 0.4rem;
   padding: 0.7rem 1rem;
   background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgb(255, 255, 255);
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.352);
   flex-shrink: 0;
 }
 
