@@ -123,7 +123,7 @@ onUnmounted(() => {
 
 .social-sidebar {
   position: fixed;
-  left: 3rem;
+  left: 1rem;
   bottom: 3rem;
   top: auto;
   transform: none;

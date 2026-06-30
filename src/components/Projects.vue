@@ -1,420 +1,346 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const activeFilter = ref('All');
+gsap.registerPlugin(ScrollTrigger);
 
-const allProjects = [
+const projects = [
   {
     num: '01',
     title: 'E-Commerce Platform',
-    subtitle: 'VNPAY & MoMo Payment — Real-time Cart — Admin Dashboard',
-    category: 'Fullstack',
-    tech: ['Laravel', 'MySQL', 'HTML', 'CSS', 'JavaScript'],
-    color: '#38bdf8',
+    category: 'Full-stack',
+    tech: 'Laravel, MySQL, HTML, CSS, JavaScript',
     github: 'https://github.com/huynvg-04/greenvibes',
     image: '/greenvibes.png',
+    link: 'https://github.com/huynvg-04/greenvibes',
   },
   {
     num: '02',
     title: 'Movie Website',
-    subtitle: 'Online Movie Streaming — Search & Genre Classification',
-    category: 'Fullstack',
-    tech: ['Laravel', 'MySQL', 'HTML', 'CSS'],
-    color: '#a855f7',
+    category: 'Full-stack',
+    tech: 'Laravel, MySQL, HTML, CSS',
     github: 'https://github.com/huynvg-04/moviewebsite',
     image: '/moviewebsite.png',
+    link: 'https://github.com/huynvg-04/moviewebsite',
+  },
+  {
+    num: '03',
+    title: 'Coming Soon',
+    category: '—',
+    tech: '—',
+    github: null,
+    image: null,
+    link: null,
+  },
+  {
+    num: '04',
+    title: 'Coming Soon',
+    category: '—',
+    tech: '—',
+    github: null,
+    image: null,
+    link: null,
   },
 ];
 
-const skeletons = [
-  { num: '03', color: '#6366f1' },
-  { num: '04', color: '#f59e0b' },
-];
-
-const filters = computed(() => [
-  'All',
-  ...new Set(allProjects.map(p => p.category)),
-]);
-
-const visibleItems = computed(() => {
-  const real =
-    activeFilter.value === 'All'
-      ? allProjects
-      : allProjects.filter(p => p.category === activeFilter.value);
-  return [
-    ...real.map(p => ({ ...p, isSkeleton: false })),
-    ...skeletons.map(s => ({ ...s, isSkeleton: true })),
-  ];
-});
-
-/* ── Sticky horizontal scroll ── */
 const sectionRef = ref(null);
-const trackRef = ref(null);
-const scrollProgress = ref(0);
-
-const activeIndex = computed(() =>
-  Math.min(
-    Math.round(scrollProgress.value * (visibleItems.value.length - 1)),
-    visibleItems.value.length - 1,
-  ),
-);
-
-const updateTranslate = () => {
-  const section = sectionRef.value;
-  const track = trackRef.value;
-  if (!section || !track) return;
-
-  const sectionTop = section.offsetTop;
-  const scrolled = window.scrollY - sectionTop;
-  const maxScroll = section.offsetHeight - window.innerHeight;
-  if (maxScroll <= 0) return;
-
-  const progress = Math.min(Math.max(scrolled / maxScroll, 0), 1);
-  scrollProgress.value = progress;
-
-  const totalTrack = track.scrollWidth - window.innerWidth;
-  track.style.transform = `translateX(${-progress * totalTrack}px)`;
-};
+const flexRef = ref(null);
+const isHovered = ref([]);
+let ctx = null;
 
 onMounted(() => {
-  window.addEventListener('scroll', updateTranslate, { passive: true });
-  updateTranslate();
+  isHovered.value = projects.map(() => false);
+
+  requestAnimationFrame(() => {
+    const boxes = document.querySelectorAll('.work-box');
+    if (!boxes.length) return;
+
+    const container = document.querySelector('.work-container-inner');
+    const rectLeft = container.getBoundingClientRect().left;
+    const firstBox = boxes[0];
+    const parentWidth = firstBox.parentElement.getBoundingClientRect().width;
+    const padding = parseInt(window.getComputedStyle(firstBox).paddingLeft) / 2;
+    const translateX = firstBox.getBoundingClientRect().width * boxes.length - (rectLeft + parentWidth) + padding;
+
+    ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.work-section',
+          start: 'top top',
+          end: `+=${translateX}`,
+          scrub: true,
+          pin: true,
+          id: 'work',
+        },
+      });
+
+      tl.to('.work-flex', {
+        x: -translateX,
+        ease: 'none',
+      });
+    });
+  });
 });
-onUnmounted(() => window.removeEventListener('scroll', updateTranslate));
-watch(visibleItems, () => nextTick(updateTranslate));
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
+  ScrollTrigger.getById('work')?.kill();
+});
+
+const handleMouseEnter = (index) => {
+  isHovered.value[index] = true;
+};
+
+const handleMouseLeave = (index) => {
+  isHovered.value[index] = false;
+};
 </script>
 
 <template>
-  <section id="projects" class="projects-section" ref="sectionRef"
-    :style="{ height: visibleItems.length * 100 + 'vh' }">
-    <div class="projects-sticky">
-
-      <!-- ── Header ─────────────────────────────── -->
-      <div class="proj-header">
-        <h2 class="proj-heading">My <span class="text-gradient">Projects</span></h2>
-      </div>
-
-      <!-- ── Horizontal track ────────────────────── -->
-      <div class="proj-track" ref="trackRef">
-        <article v-for="(item, index) in visibleItems" :key="item.num" class="proj-slide"
-          :style="{ '--c': item.color }">
-          <!-- Watermark number -->
-          <span class="wm-num" aria-hidden="true">{{ item.num }}</span>
-
-          <!-- Left — Info -->
-          <div class="slide-info">
-            <div class="slide-top">
-              <span class="slide-idx">{{ item.num }}</span>
-              <div class="slide-meta">
-                <template v-if="!item.isSkeleton">
-                  <h3 class="slide-name">{{ item.title }}</h3>
-                  <p class="slide-sub">{{ item.subtitle }}</p>
-                </template>
-                <template v-else>
-                  <div class="skel skel-h"></div>
-                  <div class="skel skel-p"></div>
-                </template>
+  <section id="projects" class="work-section" ref="sectionRef">
+    <div class="work-container-inner section-container">
+      <h2>My <span>Work</span></h2>
+      <div class="work-flex" ref="flexRef">
+        <div v-for="(project, index) in projects" :key="project.num" class="work-box"
+          :class="{ even: index % 2 !== 0 }">
+          <!-- Info block -->
+          <div class="work-info">
+            <div class="work-title">
+              <h3>{{ project.num }}</h3>
+              <div>
+                <h4>{{ project.title }}</h4>
+                <p>{{ project.category }}</p>
               </div>
             </div>
-
-            <div class="slide-divider"></div>
-
-            <template v-if="!item.isSkeleton">
-              <div>
-                <p class="tech-label">Technologies Used</p>
-                <p class="tech-text">{{ item.tech.join(', ') }}</p>
-              </div>
-              <div class="slide-actions">
-                <a :href="item.github" target="_blank" rel="noopener" class="slide-btn">
-                  GitHub ↗
-                </a>
-              </div>
-            </template>
-            <template v-else>
-              <div>
-                <div class="skel skel-label"></div>
-                <div class="skel skel-tech"></div>
-              </div>
-              <span class="coming-badge">Coming Soon</span>
-            </template>
+            <h4 class="tech-label">Tools and features</h4>
+            <p class="tech-text">{{ project.tech }}</p>
           </div>
 
-          <!-- Right — Preview -->
-          <div class="slide-preview">
-            <template v-if="!item.isSkeleton">
-              <img v-if="item.image" :src="item.image" :alt="item.title" class="project-image" />
-              <div v-else class="mockup">
-                <div class="mockup-bar">
-                  <span class="mdot" v-for="i in 3" :key="i"></span>
-                  <div class="murl"></div>
-                </div>
-                <div class="mockup-body">
-                  <div class="m-sidebar">
-                    <div class="ms-item" v-for="i in 5" :key="i"></div>
-                  </div>
-                  <div class="m-main">
-                    <div class="m-line" style="width:70%"></div>
-                    <div class="m-line" style="width:45%"></div>
-                    <div class="m-cards">
-                      <div class="m-card" v-for="i in 4" :key="i"></div>
-                    </div>
-                    <div class="m-line" style="width:60%"></div>
+          <div class="work-image">
+            <a class="work-image-in" :href="project.link || '#'" :target="project.link ? '_blank' : '_self'"
+              rel="noopener" @mouseenter="handleMouseEnter(index)" @mouseleave="handleMouseLeave(index)">
+              <template v-if="project.image">
+                <div v-if="project.link" class="work-link">↗</div>
+                <img :src="project.image" :alt="project.title" />
+              </template>
+              <template v-else>
+                <div class="work-placeholder">
+                  <span class="coming-soon-badge">Coming Soon</span>
+                  <div class="placeholder-lines">
+                    <div class="ph-line" style="width: 70%"></div>
+                    <div class="ph-line" style="width: 45%"></div>
+                    <div class="ph-line" style="width: 60%"></div>
                   </div>
                 </div>
-              </div>
-            </template>
-            <template v-else>
-              <div class="skel-preview-inner">
-                <div class="skel skel-mbar"></div>
-                <div class="skel-mbody">
-                  <div class="skel skel-msidebar"></div>
-                  <div class="skel-mmain">
-                    <div class="skel skel-mline"></div>
-                    <div class="skel skel-mline short"></div>
-                    <div class="skel skel-mblock"></div>
-                    <div class="skel skel-mline" style="width:60%"></div>
-                  </div>
-                </div>
-              </div>
-            </template>
+              </template>
+            </a>
           </div>
-
-        </article>
-      </div>
-
-      <!-- ── Footer — dots + hint ───────────────── -->
-      <div class="proj-footer">
-        <div class="proj-dots">
-          <span v-for="(item, i) in visibleItems" :key="i" class="proj-dot"
-            :class="{ active: activeIndex === i }"></span>
         </div>
-        <transition name="fade-hint">
-          <span v-if="activeIndex < visibleItems.length - 1" class="scroll-hint" key="more">
-            Scroll to see more →
-          </span>
-          <span v-else class="scroll-hint done" key="done">
-            Scroll to continue ↓
-          </span>
-        </transition>
       </div>
-
     </div>
   </section>
 </template>
 
 <style scoped>
-/* ─── Section / Sticky wrapper ─────────────────────────────── */
-.projects-section {
-  position: relative;
-}
-
-.projects-sticky {
-  position: sticky;
-  top: 0;
+.work-section {
   height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  box-sizing: border-box;
+  will-change: transform;
   background: var(--bg-dark);
 }
 
-.proj-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6rem 5vw 1.25rem 9rem;
-  border-bottom: 0.5px solid rgba(255, 255, 255, 0.352);
-  flex-shrink: 0;
-}
-
-.proj-heading {
-  font-size: clamp(2.24rem, 4.9vw, 3.36rem);
+.work-section h2 {
+  margin-top: 80px;
+  margin-bottom: 1rem;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: 500;
   line-height: 1;
+  padding-left: 0;
 }
 
-.filter-tabs {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.filter-btn {
-  padding: 0.45rem 1.1rem;
-  border-radius: 50px;
-  border: 1px solid var(--border-glass);
-  background: var(--bg-glass);
-  color: var(--text-muted);
-  font-family: var(--font-main);
-  font-weight: 500;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: var(--transition);
-  pointer-events: auto;
-}
-
-.filter-btn:hover {
-  border-color: var(--accent);
+.work-section h2>span {
   color: var(--accent);
 }
 
-.filter-btn.active {
-  background: var(--accent-gradient);
-  color: #fff;
-  border-color: transparent;
-  box-shadow: 0 4px 16px var(--shadow-glow);
-}
-
-/* ─── Horizontal track ─────────────────────────────────────── */
-.proj-track {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-  will-change: transform;
-  transition: transform 0.1s cubic-bezier(0.21, 0.85, 0.35, 1);
-}
-
-.proj-slide {
-  min-width: 100vw;
-  width: 100vw;
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  padding: 2rem 6vw;
-  gap: 4vw;
-  box-sizing: border-box;
-  position: relative;
-  overflow: hidden;
-  border-right: 0.5px solid rgba(255, 255, 255, 0.352);
-}
-
-.proj-slide:last-child {
-  border-right: none;
-}
-
-/* Watermark giant number */
-.wm-num {
-  position: absolute;
-  bottom: -0.12em;
-  left: 4vw;
-  font-size: clamp(7rem, 22vw, 20rem);
-  font-weight: 900;
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.035);
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-}
-
-/* ─── Slide Info (left) ─────────────────────────────────────── */
-.slide-info {
+.work-container-inner {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
-  position: relative;
-  z-index: 1;
+  height: 100%;
+  max-width: none;
+  width: 100%;
+  padding: 0 60px;
+  box-sizing: border-box;
 }
 
-.slide-top {
+.work-flex {
+  width: 100%;
   display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
+  height: 100%;
+  margin-left: -80px;
+  padding-right: 120px;
+  position: relative;
 }
 
-.slide-idx {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 900;
-  line-height: 1;
-  color: var(--accent);
+/* Top & bottom border lines spanning the full scroll width */
+.work-flex::before,
+.work-flex::after {
+  content: '';
+  width: 50000vw;
+  height: 1px;
+  background-color: #363636;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.work-flex::after {
+  top: 100%;
+}
+
+.work-box {
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  width: 550px;
+  box-sizing: border-box;
+  border-right: 1px solid #363636;
   flex-shrink: 0;
-  letter-spacing: -0.02em;
+  gap: 40px;
+  justify-content: center;
 }
 
-.slide-meta {
-  flex: 1;
-  padding-top: 0.35rem;
+/* Even boxes flip the layout */
+.work-box.even {
+  flex-direction: column-reverse;
 }
 
-.slide-name {
-  font-size: clamp(1.2rem, 2.2vw, 1.75rem);
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 0.5rem;
+/* ── Info ── */
+.work-title {
+  justify-content: space-between;
+  display: flex;
+  width: 100%;
+  margin-bottom: 16px;
+  align-items: flex-start;
+}
+
+.work-title>div {
+  text-align: right;
+}
+
+.work-title h3 {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  line-height: 1;
+  margin: 0;
+  font-weight: 600;
   color: var(--text-main);
 }
 
-.slide-sub {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.6;
+.work-info h4 {
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--text-main);
 }
 
-.slide-divider {
-  height: 1px;
-  background: linear-gradient(90deg, var(--accent) 0%, transparent 80%);
-  opacity: 0.35;
+.work-info p {
+  font-weight: 300;
+  color: var(--text-muted);
+  margin: 0;
+  margin-top: 3px;
+  font-size: 0.9rem;
 }
 
 .tech-label {
-  font-size: 0.72rem;
+  font-size: 0.75rem !important;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted) !important;
+  font-weight: 400 !important;
 }
 
 .tech-text {
-  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-  color: var(--text-main);
-  line-height: 1.65;
+  font-size: 0.95rem;
+  color: var(--text-main) !important;
+  line-height: 1.5;
+  font-weight: 300 !important;
 }
 
-.slide-actions {
+/* ── Image ── */
+.work-image {
   display: flex;
-  gap: 0.75rem;
+  width: 100%;
+  justify-content: center;
 }
 
-.slide-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.65rem 1.6rem;
-  border: 1px solid var(--border-glass-hover);
-  border-radius: 50px;
-  color: var(--text-main);
+.work-image-in {
+  position: relative;
+  display: block;
+  color: inherit;
   text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 500;
-  font-family: var(--font-main);
-  background: var(--bg-glass);
-  transition: var(--transition);
-  cursor: pointer;
-  pointer-events: auto;
 }
 
-.slide-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--bg-glass-hover);
-}
-
-.coming-badge {
-  display: inline-flex;
+.work-link {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: var(--bg-dark);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  align-self: flex-start;
-  padding: 0.5rem 1.25rem;
-  border: 1px dashed var(--border-glass-hover);
-  border-radius: 50px;
+  font-size: 1.3rem;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.45), inset 0 0 10px #393939;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  color: var(--text-main);
+  z-index: 2;
+}
+
+.work-image-in:hover .work-link {
+  opacity: 1;
+}
+
+.work-image img {
+  max-width: 100%;
+  max-height: 320px;
+  display: block;
+  object-fit: cover;
+  object-position: top;
+  border: 1px solid #363636;
+}
+
+/* ── Placeholder for coming soon ── */
+.work-placeholder {
+  width: 390px;
+  height: 220px;
+  border: 1px dashed #363636;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.coming-soon-badge {
+  font-size: 0.8rem;
   color: var(--text-muted);
-  font-size: 0.83rem;
-  animation: cpulse 2s ease-in-out infinite;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px dashed #444;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  animation: cpulse 2.5s ease-in-out infinite;
 }
 
 @keyframes cpulse {
 
   0%,
   100% {
-    opacity: 0.5;
+    opacity: 0.4;
   }
 
   50% {
@@ -422,123 +348,22 @@ watch(visibleItems, () => nextTick(updateTranslate));
   }
 }
 
-.slide-preview {
-  position: relative;
-  z-index: 1;
-  height: min(400px, 52vh);
-  overflow: hidden;
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.05) 0%,
-      rgba(255, 255, 255, 0.01) 100%);
-  border: 1px solid rgba(255, 240, 240, 0.215);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  transition: box-shadow 0.4s ease;
-}
-
-.project-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
-}
-
-.mockup {
-  width: 100%;
-  height: 100%;
+.placeholder-lines {
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
+  width: 70%;
 }
 
-.mockup-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.7rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 0.5px solid rgba(255, 255, 255, 0.352);
-  flex-shrink: 0;
-}
-
-.mdot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--border-glass-hover);
-}
-
-.murl {
-  flex: 1;
-  height: 6px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.06);
-  margin-left: 0.5rem;
-}
-
-.mockup-body {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-}
-
-.m-sidebar {
-  width: 22%;
-  padding: 0.75rem 0.5rem;
-  border-right: 1px solid var(--border-glass);
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  flex-shrink: 0;
-}
-
-.ms-item {
+.ph-line {
   height: 8px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.ms-item:first-child {
-  background: var(--accent);
-  opacity: 0.4;
-}
-
-.m-main {
-  flex: 1;
-  padding: 0.85rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.m-line {
-  height: 8px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.07);
-}
-
-.m-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.55rem;
-  flex: 1;
-  margin-top: 0.25rem;
-}
-
-.m-card {
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent), transparent);
-  opacity: 0.12;
-  min-height: 40px;
-}
-
-/* ── Skeleton ── */
-.skel {
   background: linear-gradient(90deg,
       rgba(255, 255, 255, 0.04) 25%,
       rgba(255, 255, 255, 0.09) 50%,
       rgba(255, 255, 255, 0.04) 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.6s linear infinite;
-  border-radius: 6px;
+  animation: shimmer 1.8s linear infinite;
 }
 
 @keyframes shimmer {
@@ -551,165 +376,50 @@ watch(visibleItems, () => nextTick(updateTranslate));
   }
 }
 
-.skel-h {
-  height: 24px;
-  width: 80%;
-  margin-bottom: 0.5rem;
-}
-
-.skel-p {
-  height: 14px;
-  width: 60%;
-}
-
-.skel-label {
-  height: 11px;
-  width: 40%;
-  margin-bottom: 0.4rem;
-}
-
-.skel-tech {
-  height: 18px;
-  width: 80%;
-}
-
-/* Skeleton preview */
-.skel-preview-inner {
-  padding: 0.75rem 1rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  box-sizing: border-box;
-}
-
-.skel-mbar {
-  height: 24px;
-  width: 100%;
-  flex-shrink: 0;
-  border-radius: 4px;
-}
-
-.skel-mbody {
-  flex: 1;
-  display: flex;
-  gap: 0.65rem;
-  min-height: 0;
-}
-
-.skel-msidebar {
-  width: 22%;
-  border-radius: 6px;
-  flex-shrink: 0;
-  align-self: stretch;
-}
-
-.skel-mmain {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.skel-mline {
-  height: 10px;
-  width: 75%;
-  border-radius: 4px;
-}
-
-.skel-mline.short {
-  width: 45%;
-}
-
-.skel-mblock {
-  flex: 1;
-  border-radius: 8px;
-  min-height: 0;
-}
-
-/* ─── Footer ──────────────────────────────────────────────── */
-.proj-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.85rem 5vw 0.85rem 9rem;
-  border-top: 0.5px solid rgba(255, 255, 255, 0.352);
-  flex-shrink: 0;
-}
-
-.proj-dots {
-  display: flex;
-  gap: 0.45rem;
-  align-items: center;
-}
-
-.proj-dot {
-  height: 5px;
-  width: 5px;
-  border-radius: 3px;
-  background: var(--border-glass-hover);
-  transition: width 0.3s ease, background 0.3s ease;
-}
-
-.proj-dot.active {
-  width: 22px;
-  background: var(--accent);
-}
-
-.scroll-hint {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  letter-spacing: 0.06em;
-}
-
-.scroll-hint.done {
-  color: var(--accent);
-}
-
-/* Fade transition for hint text */
-.fade-hint-enter-active,
-.fade-hint-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-hint-enter-from,
-.fade-hint-leave-to {
-  opacity: 0;
-}
-
-/* ─── Responsive ───────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .proj-slide {
-    grid-template-columns: 1fr;
-    padding: 1.5rem 6vw 1rem;
-    overflow-y: auto;
-    align-items: start;
+/* ── Responsive ── */
+@media (max-width: 1400px) {
+  .work-box {
+    width: 450px;
+    padding: 50px;
   }
 
-  .slide-preview {
-    height: 220px;
+  .work-flex {
+    margin-left: -50px;
+    padding-right: 75px;
   }
 
-  .wm-num {
-    font-size: clamp(5rem, 28vw, 10rem);
-    bottom: -0.05em;
+  .work-title h3 {
+    font-size: 2.2rem;
   }
 }
 
-@media (max-width: 600px) {
-  .proj-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 5rem 6vw 1rem;
+@media (max-height: 900px) {
+  .work-image img {
+    max-height: 240px;
   }
 
-  .slide-idx {
-    font-size: 2rem;
+  .work-box {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    gap: 24px;
   }
 
-  .slide-divider {
-    margin: 0;
+  .work-section h2 {
+    margin-top: 50px;
+  }
+}
+
+@media (max-height: 650px) {
+  .work-image img {
+    max-height: 180px;
+  }
+
+  .work-placeholder {
+    height: 160px;
+  }
+
+  .work-box {
+    gap: 16px;
   }
 }
 </style>
