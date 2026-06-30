@@ -46,8 +46,9 @@ const handleMouseLeave = () => {
           x: 0,
           y: 0,
           rotation: 0,
-          duration: 1.5,
-          ease: 'elastic.out(1, 0.4)',
+          scale: 1,
+          duration: 3.5,
+          ease: 'elastic.out(1, 0.2)',
           overwrite: 'auto'
         });
       }
@@ -57,49 +58,54 @@ const handleMouseLeave = () => {
 
 const animate = () => {
   if (isHovering && letters.value) {
-    const repelRadius = 150;
-
+    const repelRadius = 250;
+    const time = Date.now() * 0.002;
+    
     letters.value.forEach((el, index) => {
       if (!el) return;
       const rect = el.getBoundingClientRect();
       const elCenterX = rect.left + rect.width / 2;
       const elCenterY = rect.top + rect.height / 2;
-
+      
       const dx = elCenterX - mouse.x;
       const dy = elCenterY - mouse.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
-
+      
       if (dist < repelRadius) {
         const force = (repelRadius - dist) / repelRadius;
-
-        const randomAngle = (index % 3 === 0 ? 1 : -1) * (index * 17 % 60);
-        const randomDist = 1 + (index % 4) * 0.3;
-
-        const targetX = (dx / dist) * force * 100 * randomDist;
-        const targetY = (dy / dist) * force * 100 * randomDist;
-
+        
+        // Base repel vector (pushes them outward)
+        const targetX = (dx / dist) * force * 150; 
+        const targetY = (dy / dist) * force * 150;
+        
+        // Chaotic space floating using sin/cos waves
+        const floatX = Math.sin(time + index * 1.5) * 60 * force;
+        const floatY = Math.cos(time * 0.8 + index * 2.0) * 60 * force;
+        const floatRot = Math.sin(time * 1.2 + index) * 90 * force;
+        
         gsap.to(el, {
-          x: targetX,
-          y: targetY,
-          rotation: targetX * 0.4 + randomAngle * force,
-          duration: 0.3,
+          x: targetX + floatX,
+          y: targetY + floatY,
+          rotation: targetX * 0.2 + floatRot,
+          scale: 1 + Math.sin(time + index) * 0.4 * force, // Adds a 3D depth illusion
+          duration: 0.5,
           ease: 'power2.out',
           overwrite: 'auto'
         });
       } else {
-
         gsap.to(el, {
           x: 0,
           y: 0,
           rotation: 0,
-          duration: 1.5,
-          ease: 'elastic.out(1, 0.4)',
+          scale: 1,
+          duration: 3.5,
+          ease: 'elastic.out(1, 0.2)',
           overwrite: 'auto'
         });
       }
     });
   }
-
+  
   animationFrameId = requestAnimationFrame(animate);
 };
 
