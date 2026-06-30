@@ -23,7 +23,12 @@ const handleScroll = () => {
     const el = document.getElementById(id);
     if (!el) continue;
     const { top } = el.getBoundingClientRect();
-    if (top <= 120) activeSection.value = id;
+    if (top <= 150) activeSection.value = id;
+  }
+
+  // If scrolled to the bottom of the page, activate the last section (Contact)
+  if (Math.ceil(window.innerHeight + scrollY) >= document.documentElement.scrollHeight - 20) {
+    activeSection.value = sections[sections.length - 1];
   }
 };
 

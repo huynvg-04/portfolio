@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import gsap from 'gsap';
+import ParticleBackground from './ParticleBackground.vue';
 
 const roles = [
   { top: 'FULL-STACK', bottom: 'DEVELOPER' }
@@ -24,28 +25,26 @@ async function animateTicker() {
     }
   });
 
-  // Top row animation
   const STAGGER_TIME = 0.1;
   const ANIM_DURATION = 1.2;
 
   tl.to('.outgoing-word.top-row .kt-char', { y: -80, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" }, 0);
-  tl.fromTo('.incoming-word.top-row .kt-char', 
-    { y: 80 }, 
-    { y: 0, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" }, 
+  tl.fromTo('.incoming-word.top-row .kt-char',
+    { y: 80 },
+    { y: 0, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" },
     0
   );
 
-  // Bottom row animation (slightly delayed for a staggered effect)
+
   tl.to('.outgoing-word.bottom-row .kt-char', { y: -80, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" }, 0.2);
-  tl.fromTo('.incoming-word.bottom-row .kt-char', 
-    { y: 80 }, 
-    { y: 0, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" }, 
+  tl.fromTo('.incoming-word.bottom-row .kt-char',
+    { y: 80 },
+    { y: 0, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" },
     0.2
   );
 }
 
 onMounted(() => {
-  // Start the GSAP text ticker loop every 4 seconds
   loopId = setInterval(() => {
     animateTicker();
   }, 4000);
@@ -58,6 +57,7 @@ onUnmounted(() => {
 
 <template>
   <section id="hero" class="hero-section">
+    <ParticleBackground />
     <div class="social-sidebar fade-right visible" data-delay="100">
       <a href="https://github.com/huynvg-04/" target="_blank" rel="noopener" aria-label="GitHub">
         <i class="fa-brands fa-github"></i>
@@ -73,10 +73,10 @@ onUnmounted(() => {
     <div class="container hero-content">
 
       <div class="hero-left" data-delay="200">
-        <span class="greeting split-text">Hello! I'm</span>
+        <span class="greeting">Hello! I'm</span>
         <h1 class="name">
-          <span class="split-text">NGO VAN</span>
-          <span class="split-text">GIA HUY</span>
+          <span>NGO VAN</span>
+          <span>GIA HUY</span>
         </h1>
       </div>
 
@@ -197,7 +197,7 @@ onUnmounted(() => {
 .greeting,
 .role-prefix {
   display: block;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Canela Text', serif;
   font-size: clamp(1.1rem, 1.8vw, 1.5rem);
   color: var(--accent);
   margin-bottom: 0.5rem;
@@ -210,40 +210,6 @@ onUnmounted(() => {
   flex-direction: column;
 }
 
-/* Hiệu ứng trồi lên lặp lại liên tục (từ dưới lên, nhịp chậm hơn) */
-@keyframes split-pop-loop {
-
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-
-  8% {
-    transform: translateY(25px) scale(0.95);
-  }
-
-  /* Nhún xuống dưới */
-  25% {
-    transform: translateY(-30px) scale(1.15);
-    color: var(--accent);
-  }
-
-  /* Trồi lên trên */
-  45% {
-    transform: translateY(0) scale(1);
-    color: inherit;
-  }
-
-  /* Về vị trí cũ */
-}
-
-.hero-left :deep(.split-char) {
-  transition: none !important;
-  opacity: 1 !important;
-  animation: split-pop-loop 6s infinite ease-in-out;
-  animation-delay: calc(var(--i, 0) * 0.12s) !important;
-}
-
 .name {
   display: flex;
   flex-direction: column;
@@ -251,7 +217,7 @@ onUnmounted(() => {
 }
 
 .name>span {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Canela Text', serif;
   font-size: clamp(1.5rem, 2vw, 6rem);
   font-weight: 700;
   color: #fff;
@@ -266,7 +232,6 @@ onUnmounted(() => {
   text-align: right;
 }
 
-/* ── Kinetic block ── */
 .kt-block {
   display: flex;
   flex-direction: column;
@@ -304,28 +269,24 @@ onUnmounted(() => {
   z-index: 1;
 }
 
-/* Individual characters */
 .kt-char {
   display: inline-block;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Canela Text', serif;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.02em;
 }
 
-/* Top row — FULL-STACK: large, neon purple outline */
 .kt-bg .kt-char {
   font-size: clamp(2.8rem, 5.5vw, 5rem);
   color: #c481ff;
 }
 
-/* Bottom row — DEVELOPER: solid white */
 .kt-fg .kt-char {
   font-size: clamp(2rem, 4vw, 3.8rem);
   color: #fff;
 }
 
-/* ── Responsive ── */
 @media (max-width: 1024px) {
   .hero-content {
     flex-direction: column;
