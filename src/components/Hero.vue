@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import gsap from 'gsap';
 import ParticleBackground from './ParticleBackground.vue';
+import ScatterText from './ScatterText.vue';
 
 const roles = [
   { top: 'FULL-STACK', bottom: 'DEVELOPER' }
@@ -75,8 +76,8 @@ onUnmounted(() => {
       <div class="hero-left" data-delay="200">
         <span class="greeting">Hello! I'm</span>
         <h1 class="name">
-          <span>NGO VAN</span>
-          <span>GIA HUY</span>
+          <ScatterText text="NGO VAN" />
+          <ScatterText text="GIA HUY" />
         </h1>
       </div>
 

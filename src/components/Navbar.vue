@@ -122,6 +122,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
   margin: 0;
   width: 100%;
   padding: 0 3rem;
@@ -182,6 +183,9 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 }
 
 .nav-actions {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 0.75rem;

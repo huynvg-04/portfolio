@@ -44,7 +44,7 @@ const isHovering = ref(false);
 const isLoading = ref(true);
 
 const handleLoadingComplete = () => {
-  gsap.set('.greeting, .name span', { opacity: 0, y: 80, filter: 'blur(5px)' });
+  gsap.set('.greeting, .name', { opacity: 0, y: 80, filter: 'blur(5px)' });
   gsap.set('.hero-right', { opacity: 0, y: 30 });
   gsap.set(['nav', '.social-sidebar'], { opacity: 0 });
 
@@ -52,7 +52,7 @@ const handleLoadingComplete = () => {
 
   nextTick(() => {
     gsap.to('.greeting', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.inOut', delay: 0.3 });
-    gsap.to('.name span', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.inOut', stagger: 0.1, delay: 0.4 });
+    gsap.to('.name', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.inOut', delay: 0.4 });
     gsap.to('.hero-right', { opacity: 1, y: 0, duration: 1.2, ease: 'power1.inOut', delay: 0.8 });
     gsap.to(['nav', '.social-sidebar'], { opacity: 1, duration: 1.2, ease: 'power1.inOut', delay: 0.1 });
   });

@@ -66,21 +66,20 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    
+
     <div class="loading-marquee">
       <div class="marquee-track-custom">
-        <span> A Creative Developer</span> <span>A Creative Designer</span>
-        <span> A Creative Developer</span> <span>A Creative Designer</span>
-        <span> A Creative Developer</span> <span>A Creative Designer</span>
+        <span> A Full-stack Developer</span>
+        <span>A Full-stack Developer</span>
+        <span> A Full-stack Developer</span>
+        <span>A Full-stack Developer</span>
+        <span> A Full-stack Developer</span>
+        <span>A Full-stack Developer</span>
       </div>
     </div>
-    
-    <div
-      class="loading-wrap"
-      :class="{ 'loading-clicked': clicked }"
-      @mousemove="handleMouseMove"
-      :style="{ '--mouse-x': mouseX + 'px', '--mouse-y': mouseY + 'px' }"
-    >
+
+    <div class="loading-wrap" :class="{ 'loading-clicked': clicked }" @mousemove="handleMouseMove"
+      :style="{ '--mouse-x': mouseX + 'px', '--mouse-y': mouseY + 'px' }">
       <div class="loading-hover"></div>
       <div class="loading-button" :class="{ 'loading-complete': loaded }">
         <div class="loading-container">
@@ -327,10 +326,21 @@ onUnmounted(() => {
 }
 
 @keyframes blink {
-  0% { opacity: 0; }
-  25% { opacity: 1; }
-  75% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 .loading-complete .loading-box {
@@ -340,7 +350,9 @@ onUnmounted(() => {
 }
 
 @keyframes blinkDone {
-  to { opacity: 0; }
+  to {
+    opacity: 0;
+  }
 }
 
 .loaderGame-container {
@@ -366,8 +378,13 @@ onUnmounted(() => {
 }
 
 @keyframes loaderGame {
-  0% { transform: translateX(0px); }
-  100% { transform: translateX(-300px); }
+  0% {
+    transform: translateX(0px);
+  }
+
+  100% {
+    transform: translateX(-300px);
+  }
 }
 
 .loaderGame-line {
@@ -437,32 +454,63 @@ onUnmounted(() => {
 }
 
 @keyframes marquee-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 @keyframes ball25 {
-  0% { transform: translateY(70px); }
-  15% { transform: translateY(10px); }
-  30% { transform: translateY(70px); }
-  45% { transform: translateY(10px); }
-  67% { transform: translateY(70px); }
-  80% { transform: translateY(10px); }
-  90% { transform: translateY(70px); }
-  100% { transform: translateY(70px); }
+  0% {
+    transform: translateY(70px);
+  }
+
+  15% {
+    transform: translateY(10px);
+  }
+
+  30% {
+    transform: translateY(70px);
+  }
+
+  45% {
+    transform: translateY(10px);
+  }
+
+  67% {
+    transform: translateY(70px);
+  }
+
+  80% {
+    transform: translateY(10px);
+  }
+
+  90% {
+    transform: translateY(70px);
+  }
+
+  100% {
+    transform: translateY(70px);
+  }
 }
 
 @media only screen and (min-width: 1400px) {
   .loading-wrap {
     --Lsize: 210px;
   }
+
   .loading-button {
     padding: 30px 70px;
     font-size: 25px;
   }
+
   .loading-container {
     left: 70px;
   }
+
   .loading-marquee {
     font-size: 100px;
   }
@@ -472,6 +520,7 @@ onUnmounted(() => {
   .loading-header {
     padding: 20px 40px;
   }
+
   .loader-title {
     font-size: 16px;
   }
@@ -481,6 +530,7 @@ onUnmounted(() => {
   .loading-header {
     padding: 35px 60px;
   }
+
   .loader-title {
     font-size: 18px;
   }
