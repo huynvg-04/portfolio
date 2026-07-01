@@ -26,12 +26,12 @@ const projects = [
   },
   {
     num: '03',
-    title: 'Coming Soon',
-    category: '—',
-    tech: '—',
-    github: null,
-    image: null,
-    link: null,
+    title: 'Personal Portfolio',
+    category: 'Frontend',
+    tech: 'Vue 3, GSAP, CSS, JavaScript',
+    github: 'https://github.com/huynvg-04/portfolio',
+    image: '/portfolio.png',
+    link: 'https://github.com/huynvg-04/portfolio',
   },
   {
     num: '04',

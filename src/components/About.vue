@@ -4,18 +4,15 @@ import { onMounted, ref } from 'vue';
 const sectionRef = ref(null);
 
 const techStack = [
-  { icon: 'fa-brands fa-html5',    color: '#e34f26', name: 'HTML5' },
+  { icon: 'fa-brands fa-html5', color: '#e34f26', name: 'HTML5' },
   { icon: 'fa-brands fa-css3-alt', color: '#1572b6', name: 'CSS3' },
-  { icon: 'fa-brands fa-js',       color: '#f7df1e', name: 'JavaScript' },
-  { icon: 'fa-brands fa-vuejs',    color: '#42b883', name: 'Vue.js' },
-  { icon: 'fa-brands fa-react',    color: '#61dafb', name: 'React.js' },
-  { icon: 'fa-brands fa-php',      color: '#777bb4', name: 'PHP' },
-  { icon: 'fa-brands fa-laravel',  color: '#ff2d20', name: 'Laravel' },
-  { icon: 'fa-brands fa-node-js',  color: '#68a063', name: 'Node.js' },
-  { icon: 'fa-solid fa-wind',      color: '#38bdf8', name: 'Tailwind' },
-  { icon: 'fa-solid fa-database',  color: '#fb923c', name: 'SQL' },
-  { icon: 'fa-brands fa-git-alt',  color: '#f05032', name: 'Git' },
-  { icon: 'fa-brands fa-figma',    color: '#a259ff', name: 'Figma' },
+  { icon: 'fa-brands fa-js', color: '#f7df1e', name: 'JavaScript' },
+  { icon: 'fa-brands fa-vuejs', color: '#42b883', name: 'Vue.js' },
+  { icon: 'fa-brands fa-php', color: '#777bb4', name: 'PHP' },
+  { icon: 'fa-brands fa-laravel', color: '#ff2d20', name: 'Laravel' },
+  { icon: 'fa-brands fa-node-js', color: '#68a063', name: 'Node.js' },
+  { icon: 'fa-solid fa-database', color: '#fb923c', name: 'SQL' },
+  { icon: 'fa-brands fa-git-alt', color: '#f05032', name: 'Git' },
 ];
 
 onMounted(() => {
@@ -36,12 +33,10 @@ onMounted(() => {
   <section id="about" class="about-section" ref="sectionRef">
     <div class="about-inner container">
 
-      <!-- Left: label -->
       <div class="about-label fade-left" data-delay="0">
         <span class="about-tag">/ ABOUT ME</span>
       </div>
 
-      <!-- Right: content -->
       <div class="about-content">
         <h3 class="about-title fade-up" data-delay="100">
           Passionate about crafting<br />
@@ -49,30 +44,29 @@ onMounted(() => {
         </h3>
 
         <p class="about-bio fade-up" data-delay="200">
-          I'm a Full-Stack Developer focused on building clean, performant, and
-          visually compelling web applications. With a strong foundation in both
-          frontend and backend technologies, I love turning complex problems into
-          elegant, user-friendly solutions.
+          I'm a recent Information Technology graduate with a strong passion for Full-Stack Development. I focus on
+          building clean, performant, and visually compelling web applications, eager to apply my academic foundation to
+          solve real-world problems.
         </p>
         <p class="about-bio fade-up" data-delay="300">
-          When I'm not coding, I'm exploring new technologies, sharpening my
-          design skills in Figma, or contributing to open-source projects. I
-          believe great software is built at the intersection of engineering and creativity.
+          During my time at university, I've cultivated hands-on experience through various academic and personal
+          projects. I am always excited to learn new technologies, sharpen my skills, and contribute to innovative
+          software solutions.
         </p>
 
         <div class="about-stats fade-up" data-delay="400">
           <div class="stat-item">
-            <span class="stat-num">2+</span>
-            <span class="stat-label">Years Experience</span>
+            <span class="stat-num">2026</span>
+            <span class="stat-label">IT Graduate</span>
           </div>
           <div class="stat-divider"></div>
           <div class="stat-item">
-            <span class="stat-num">10+</span>
+            <span class="stat-num">2+</span>
             <span class="stat-label">Projects Built</span>
           </div>
           <div class="stat-divider"></div>
           <div class="stat-item">
-            <span class="stat-num">5+</span>
+            <span class="stat-num">9</span>
             <span class="stat-label">Technologies</span>
           </div>
         </div>
@@ -80,12 +74,7 @@ onMounted(() => {
         <div class="tech-stack fade-up" data-delay="500">
           <p class="tech-stack-label">Tech Stack</p>
           <div class="tech-grid">
-            <div
-              v-for="tech in techStack"
-              :key="tech.name"
-              class="tech-item"
-              :style="{ '--tech-color': tech.color }"
-            >
+            <div v-for="tech in techStack" :key="tech.name" class="tech-item" :style="{ '--tech-color': tech.color }">
               <i :class="tech.icon"></i>
               <span>{{ tech.name }}</span>
             </div>
@@ -112,7 +101,6 @@ onMounted(() => {
   padding: 0 2rem;
 }
 
-/* ── Left label column ── */
 .about-label {
   flex-shrink: 0;
   padding-top: 0.5rem;
@@ -129,7 +117,6 @@ onMounted(() => {
   opacity: 0.7;
 }
 
-/* ── Right content column ── */
 .about-content {
   flex: 1;
   max-width: 700px;

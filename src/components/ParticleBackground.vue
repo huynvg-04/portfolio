@@ -20,7 +20,6 @@ const plane = new THREE.Mesh(
 );
 
 const handleMouseMove = (event) => {
-  // Normalize mouse coordinates from -1 to 1
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 };
@@ -58,7 +57,7 @@ onMounted(() => {
     positions[i * 3] = (Math.random() - 0.5) * 50; // x
     positions[i * 3 + 1] = (Math.random() - 0.5) * 50; // y
     positions[i * 3 + 2] = (Math.random() - 0.5) * 20; // z
-    
+
     sizes[i] = Math.random() * 2.0 + 0.5;
   }
 
@@ -124,10 +123,10 @@ onMounted(() => {
 
   // Animation Loop
   const clock = new THREE.Clock();
-  
+
   const animate = () => {
     const elapsedTime = clock.getElapsedTime();
-    
+
     // Update Raycaster for mouse
     raycaster.setFromCamera(mouse, camera.value);
     const intersects = raycaster.intersectObject(plane);
@@ -137,7 +136,7 @@ onMounted(() => {
     } else {
       mouse3D.set(-9999, -9999, -9999);
     }
-    
+
     if (material.value) {
       material.value.uniforms.uTime.value = elapsedTime;
       material.value.uniforms.uMouse.value.copy(mouse3D);
@@ -157,7 +156,7 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
   window.removeEventListener('mousemove', handleMouseMove);
   if (animationId) cancelAnimationFrame(animationId);
-  
+
   if (renderer.value) {
     renderer.value.dispose();
   }
@@ -179,6 +178,6 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   z-index: 0;
-  pointer-events: none; /* Allows clicking links underneath */
+  pointer-events: none;
 }
 </style>

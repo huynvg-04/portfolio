@@ -11,22 +11,22 @@ const bodyRef = ref(null);
 
 const experiences = [
   {
-    year: '2019',
+    year: '2019-2022',
     role: 'THPT Hoài Đức B, Hà Nội ',
     company: 'A11 - K42',
-    desc: 'Started building web applications with HTML, CSS, and JavaScript. Learned Vue.js and began creating responsive, interactive interfaces for personal and academic projects.',
+    desc: 'Started building web applications with HTML, CSS, and JavaScript.',
   },
   {
-    year: '2022',
+    year: '2022-2026',
     role: 'Ha Noi University of Natural Resources and Environment',
     company: 'Information Technology ĐH12C4',
-    desc: 'Developed full-stack applications using Laravel, MySQL, and Vue.js. Built an e-commerce platform (GreenVibes) and a movie website, gaining deep backend experience with REST APIs.',
+    desc: 'Developed full-stack applications using Laravel, MySQL. Built an e-commerce platform (GreenVibes) and a movie website, gaining deep backend experience with REST APIs.',
   },
   {
     year: '2026',
     role: 'Full-Stack Developer',
     company: 'Freelance & Open Source',
-    desc: 'Building production-grade web applications with modern stacks including Vue.js, React, Node.js and Laravel. Focused on performance, clean architecture and compelling UI/UX.',
+    desc: 'Building production-grade web applications with modern stacks including Vue.js and Laravel. Focused on performance, clean architecture and compelling UI/UX.',
   },
 ];
 
@@ -140,6 +140,8 @@ onUnmounted(() => {
 
 .career-amp {
   font-family: var(--font-code);
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent);
   font-weight: 300;
   opacity: 0.7;
 }

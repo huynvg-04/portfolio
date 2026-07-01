@@ -13,6 +13,17 @@ const incomingRole = ref(roles[0]);
 const outgoingRole = ref(null);
 let loopId = null;
 
+const sidebarRef = ref(null);
+
+const handleMouseMove = (e) => {
+  if (!sidebarRef.value) return;
+  const rect = sidebarRef.value.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  sidebarRef.value.style.setProperty('--x', `${x}px`);
+  sidebarRef.value.style.setProperty('--y', `${y}px`);
+};
+
 async function animateTicker() {
   outgoingRole.value = incomingRole.value;
   currentIndex.value = (currentIndex.value + 1) % roles.length;
@@ -36,6 +47,7 @@ async function animateTicker() {
     0
   );
 
+
   tl.to('.outgoing-word.bottom-row .kt-char', { y: -80, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" }, 0.2);
   tl.fromTo('.incoming-word.bottom-row .kt-char',
     { y: 80 },
@@ -58,7 +70,8 @@ onUnmounted(() => {
 <template>
   <section id="hero" class="hero-section">
     <ParticleBackground />
-    <div class="social-sidebar fade-right visible" data-delay="100">
+    <div class="social-sidebar fade-right visible" data-delay="100" ref="sidebarRef" @mousemove="handleMouseMove"
+      @mouseenter="handleMouseMove">
       <a href="https://github.com/huynvg-04/" target="_blank" rel="noopener" aria-label="GitHub">
         <i class="fa-brands fa-github"></i>
       </a>
@@ -80,8 +93,10 @@ onUnmounted(() => {
         </h1>
       </div>
 
-      <div class="hero-right" data-delay="300">
-        <span class="role-prefix">A Creative</span>
+      <div class="hero-right fade-left visible" data-delay="300">
+        <div class="role-wrapper">
+          <span class="role-prefix">A Creative</span>
+        </div>
         <div class="kt-block">
           <div class="kt-row kt-bg">
             <div v-if="outgoingRole" class="word-wrapper outgoing-word top-row">
@@ -133,6 +148,21 @@ onUnmounted(() => {
   padding: 1.5rem 1rem;
   border-radius: 50px;
   transition: all 0.2s ease-out;
+  overflow: hidden;
+}
+
+.social-sidebar::before {
+  content: '';
+  position: absolute;
+  top: var(--y, 50%);
+  left: var(--x, 50%);
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgb(226, 198, 255);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease-out, height 0.4s ease-out;
+  z-index: 0;
 }
 
 .social-sidebar a {
@@ -143,11 +173,17 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 1;
 }
 
 .social-sidebar:hover {
-  background: rgb(226, 198, 255);
   box-shadow: 0 0 30px 5px rgba(214, 173, 255, 0.8);
+}
+
+.social-sidebar:hover::before {
+  width: 400px;
+  height: 400px;
 }
 
 .social-sidebar:hover a {
@@ -194,6 +230,12 @@ onUnmounted(() => {
   z-index: 1;
 }
 
+.role-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+}
+
 .greeting,
 .role-prefix {
   display: block;
@@ -213,7 +255,7 @@ onUnmounted(() => {
 .name {
   display: flex;
   flex-direction: column;
-  line-height: 1.05;
+  line-height: 1.5;
 }
 
 .name>span {
@@ -230,7 +272,6 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
-  opacity: 0;
 }
 
 .kt-block {
@@ -279,7 +320,7 @@ onUnmounted(() => {
 }
 
 .kt-bg .kt-char {
-  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  font-size: clamp(2rem, 4vw, 3.8rem);
   color: #c481ff;
 }
 
