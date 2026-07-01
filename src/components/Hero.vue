@@ -36,7 +36,6 @@ async function animateTicker() {
     0
   );
 
-
   tl.to('.outgoing-word.bottom-row .kt-char', { y: -80, stagger: STAGGER_TIME, duration: ANIM_DURATION, ease: "power3.inOut" }, 0.2);
   tl.fromTo('.incoming-word.bottom-row .kt-char',
     { y: 80 },
@@ -81,7 +80,7 @@ onUnmounted(() => {
         </h1>
       </div>
 
-      <div class="hero-right fade-left visible" data-delay="300">
+      <div class="hero-right" data-delay="300">
         <span class="role-prefix">A Creative</span>
         <div class="kt-block">
           <div class="kt-row kt-bg">
@@ -231,6 +230,7 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
+  opacity: 0;
 }
 
 .kt-block {

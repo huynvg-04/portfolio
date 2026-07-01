@@ -2,6 +2,8 @@
 import Navbar from './components/Navbar.vue';
 import Hero from './components/Hero.vue';
 import About from './components/About.vue';
+import WhatIDo from './components/WhatIDo.vue';
+import Career from './components/Career.vue';
 import Projects from './components/Projects.vue';
 import Contact from './components/Contact.vue';
 import LoadingScreen from './components/LoadingScreen.vue';
@@ -53,7 +55,15 @@ const handleLoadingComplete = () => {
   nextTick(() => {
     gsap.to('.greeting', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.inOut', delay: 0.3 });
     gsap.to('.name', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.2, ease: 'power3.inOut', delay: 0.4 });
-    gsap.to('.hero-right', { opacity: 1, y: 0, duration: 1.2, ease: 'power1.inOut', delay: 0.8 });
+    gsap.set('.hero-right', { opacity: 1 });
+    gsap.fromTo('.role-prefix',
+      { opacity: 0, y: 20, filter: 'blur(8px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'power3.out', delay: 1.65 }
+    );
+    gsap.fromTo('.kt-block',
+      { opacity: 0, y: 36, filter: 'blur(8px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.05, ease: 'power3.out', delay: 1.82 }
+    );
     gsap.to(['nav', '.social-sidebar'], { opacity: 1, duration: 1.2, ease: 'power1.inOut', delay: 0.1 });
   });
 };
@@ -155,10 +165,11 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
     <main>
       <Hero />
 
-
       <About />
 
+      <WhatIDo />
 
+      <Career />
 
       <Projects />
       <Contact />
@@ -202,17 +213,6 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 .split-visible .split-char {
   transform: translateY(0);
   opacity: 1;
-}
-
-.marquee-section {
-  width: 100%;
-  overflow: hidden;
-  padding: 1.25rem 0;
-  border-top: 1px solid var(--border-glass);
-  border-bottom: 1px solid var(--border-glass);
-  background: rgba(255, 255, 255, 0.02);
-  position: relative;
-  z-index: 2;
 }
 
 .marquee-track {
@@ -277,9 +277,7 @@ const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
 
-.marquee-section:hover .marquee-track {
-  animation-play-state: paused;
-}
+
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
